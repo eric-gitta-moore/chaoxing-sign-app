@@ -43,7 +43,7 @@
 
 2. #### uni-app应用标识(AppID)需要重新获取一下
 
-3. #### 地图使用的是高德地图，配置教程[地图插件配置 - DCloud问答](https://ask.dcloud.net.cn/article/29)
+3. #### 地图使用的是高德地图，需要配置自己的appkey，配置教程[地图插件配置 - DCloud问答](https://ask.dcloud.net.cn/article/29)
 
 
 
