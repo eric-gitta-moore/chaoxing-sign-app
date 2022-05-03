@@ -1,0 +1,87 @@
+<template>
+	<view class="tabs">
+		<u-sticky class="u-sticky" bgColor="#fff">
+			<u-tabs :list="tabList" @change="onChangeTab" :current="currentIndex"></u-tabs>
+		</u-sticky>
+
+		<swiper class="tab-view" @change="onChangeSwiper" :current="currentIndex">
+			<swiper-item class="tab-bar-view" v-for="(tab,index) in tabList" :key="tab.current" :item-id="tab.current">
+				<swiperPage class="swiper-page" :course-id="tab.current" :u-toast='uToast'></swiperPage>
+			</swiper-item>
+		</swiper>
+	</view>
+</template>
+
+<script>
+	import swiperPage from './nvue-swiper-page.nvue';
+	import Constant from '@/const.js'
+
+	import {
+		mapState
+	} from 'vuex'
+
+	export default {
+		components: {
+			swiperPage
+		},
+		data() {
+			return {
+				tabList: [],
+				currentIndex: 0,
+				
+				
+				actionSheetIsShow: false,
+				actionSheetActions: [{
+						name: '普通签到',
+						signType: Constant.signType.generalSign
+					},
+					{
+						name: '拍照签到',
+						signType: Constant.signType.photoSign,
+					},
+				],
+			}
+		},
+		computed: {
+			...mapState({
+				courseList: state => state.course.courseList
+			})
+		},
+		onShow() {},
+		beforeMount() {
+			//这里要在mounted之前把列表填充好，不然会报错，Uncaught (in promise) TypeError: Cannot read properties of undefined (reading '0')
+			this.tabList.push({
+				current: 0,
+				name: '全部',
+			})
+			if (this.courseList) {
+				for (const courseListElement of this.courseList) {
+					this.tabList.push({
+						current: Number(courseListElement.courseId),
+						name: courseListElement.name,
+					})
+				}
+			}
+			this.currentIndex = this.tabList[0].current
+		},
+		methods: {
+			onChangeTab(e) {
+				this.currentIndex = e.index
+			},
+			onChangeSwiper(e) {
+				this.currentIndex = e.detail.current
+			},
+			
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.tabs {
+		flex: 1;
+	}
+
+	.tab-view {
+		flex: 1;
+	}
+</style>

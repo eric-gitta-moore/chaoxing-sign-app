@@ -1,7 +1,9 @@
 .DS_Store
 node_modules
 /dist
-!unpackage/res
+unpackage/cache
+unpackage/dist
+unpackage/release
 uni_modules
 
 

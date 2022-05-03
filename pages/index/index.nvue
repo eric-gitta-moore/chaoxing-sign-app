@@ -1,0 +1,233 @@
+<template>
+	<view class="container">
+		<list class="list">
+			<refresh @pullingdown='onpullingdown' @refresh="onrefresh" :display=" refreshing ? 'show' : 'hide' "
+				class="refresh">
+				<div class="refresh-view">
+					<text class="loading-text">{{refreshText}}</text>
+				</div>
+			</refresh>
+			<cell v-for="(v,k) in courseList" :key="v.courseId">
+				<view class="card">
+					<view class="title">
+						<image mode="aspectFill" class="img" :src="v.img"></image>
+						<view class="sum">
+							<text>{{v.name}}</text>
+							<text class="teacher-text">{{v.teacher}}</text>
+						</view>
+					</view>
+					<view class="main">
+						<view class="item">
+							<text class="item-title">课程ID：</text>
+							<text class="content" :selectable="true">{{v.courseId}}</text>
+						</view>
+						<view class="item">
+							<text class="item-title">班级ID：</text>
+							<text class="content" :selectable="true">{{v.classId}}</text>
+						</view>
+						<view class="introduce">
+							<text class="item-title">班级名：</text>
+							<text class="content" :selectable="true">{{v.className}}</text>
+						</view>
+						<view class="introduce" v-if="v.summary">
+							<text class="item-title">课程介绍：</text>
+							<!-- // TODO: 这里如果设置flex:row之后，下面的text无法换行 -->
+							<rich-text class="content" :nodes="richNodes(v.summary)"></rich-text>
+						</view>
+					</view>
+				</view>
+			</cell>
+		</list>
+		<wrap-version-update ref="wrapVersionUpdate" :id="appId" @check="onUpdateCheck">
+		</wrap-version-update>
+	</view>
+</template>
+
+<script>
+	import courseBiz from '@/biz/course.js';
+	import {
+		mapState
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				refreshText: "",
+				refreshing: false,
+				appId: '626f7bfb2a9fda0001d92d17'
+			}
+		},
+		computed: {
+			...mapState({
+				courseList: state => state.course.courseList
+			})
+		},
+		methods: {
+			/**
+			 * @description 普通文字转富文本
+			 * @param {String} text
+			 */
+			richNodes(text) {
+				return [{
+					name: 'p',
+					children: [{
+						type: 'text',
+						text
+					}]
+				}]
+			},
+			/**
+			 * @description 刷新课程列表
+			 */
+			async refreshCourseList(force = false) {
+				await this.$store.dispatch('course/getCourseList', force)
+				console.log('refreshCourseList', this.courseList)
+			},
+			onpullingdown(e) {
+				if (this.refreshing) return;
+				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
+					this.refreshText = '释放立即刷新'
+				} else {
+					this.refreshText = '下拉可以刷新'
+				}
+			},
+			onrefresh(e) {
+				if (this.refreshing) return;
+				this.refreshing = true;
+				this.refreshText = "刷新中...";
+				this.refreshCourseList(true).then(() => {
+					this.refreshing = false;
+					this.refreshText = "已刷新";
+				})
+			},
+			/**
+			 * @description 初始化所有数据
+			 */
+			async initData() {
+				try {
+					await this.$store.dispatch('user/getUserInfo')
+					await this.$store.dispatch('user/getLoginParams')
+					await this.refreshCourseList()
+					await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
+					uni.preloadPage({
+						url: "/pages/activity/activity"
+					});
+					uni.preloadPage({
+						url: "/pages/user/user"
+					});
+				} catch (e) {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'error'
+					})
+					uni.navigateTo({
+						url: '/pages/user/login'
+					})
+				}
+				if (this.$store.state.user.cookies.length === 0) {
+					uni.showToast({
+						title: '请先登录',
+						icon: 'error'
+					})
+					uni.navigateTo({
+						url: '/pages/user/login'
+					})
+				}
+				console.log('打架了发送到看了副经理京东方', this)
+			},
+			/**
+			 * @description 检查更新确认确实有更新
+			 * @param {Object} res
+			 */
+			onUpdateCheck(res) {
+				if (!res.needUpdate) return;
+				this.$refs.wrapVersionUpdate.$destroy()
+				uni.showModal({
+					content: `有新版本更新,请复制下载地址,手动打开手机浏览器输入地址下载\n${res.description}\n下载链接：\n${res.pkgUrl}`,
+					confirmText: "复制",
+					success: (r) => {
+						if (r.confirm) {
+							uni.setClipboardData({
+								data: res.pkgUrl,
+							})
+						}
+					}
+				})
+			}
+
+		},
+		mounted() {
+			this.initData()
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.container {
+		padding: 0;
+		font-size: 14px;
+		background-color: #f5f7f6;
+		flex: 1;
+	}
+
+
+	.refresh-view {
+		width: 750rpx;
+		height: 80px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.list {
+
+		.card {
+			background-color: #fff;
+			margin: 10px 15px;
+			box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+			padding: 15px;
+		}
+
+
+		.main {
+			.item-title {
+				font-weight: 700;
+			}
+
+			.content {
+				color: #646464;
+			}
+
+			.item {
+				flex-direction: row;
+
+			}
+
+			.introduce {
+				flex-direction: column;
+			}
+		}
+
+		.title {
+			flex-direction: row;
+
+			.img {
+				width: 80rpx;
+				height: 80rpx;
+				border-radius: 8rpx;
+			}
+
+			.sum {
+				flex-direction: column;
+				justify-content: space-around;
+				padding-left: 20rpx;
+
+				.teacher-text {
+					color: rgba(0, 0, 0, .4);
+				}
+
+			}
+
+		}
+	}
+</style>

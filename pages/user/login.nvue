@@ -1,0 +1,111 @@
+<template>
+	<view>
+		<u--form :model="formData" :rules="rules" class="u--form" ref="form1">
+			<u-form-item label="账号" prop="userInfo.account" borderBottom>
+				<u--input v-model="formData.userInfo.account" clearable></u--input>
+			</u-form-item>
+			<u-form-item label="密码" prop="userInfo.pwd" borderBottom>
+				<u--input clearable v-model="formData.userInfo.pwd" type="password"></u--input>
+			</u-form-item>
+			<u-button type="primary" text="提交" customStyle="margin-top: 50px" @click="submit"></u-button>
+		</u--form>
+		<u-toast ref="uToast"></u-toast>
+	</view>
+</template>
+
+<script>
+	import userBiz from '@/biz/user.js'
+	import {
+		mapGetters
+	} from 'vuex'
+	export default {
+		data() {
+			return {
+				// 校验规则
+				rules: {
+					'userInfo.account': {
+						required: true,
+						message: '账号不能为空',
+						transform(v) {
+							return String(v).trim()
+						},
+					},
+					'userInfo.pwd': {
+						required: true,
+						message: '密码不能为空',
+						transform(v) {
+							return String(v).trim()
+						},
+					}
+				},
+				formData: {
+					userInfo: {
+						account: '',
+						pwd: '',
+					},
+				},
+			};
+		},
+		methods: {
+			async submit() {
+				try {
+					await this.$refs.form1.validate()
+					this.login(this.formData.userInfo)
+				} catch (e) {}
+			},
+			async login(res) {
+				let r = await this.$store.dispatch('user/login', res)
+				if (r.status === false) {
+					this.$refs.uToast.show({
+						message: r.msg2,
+						type: 'error',
+						duration: 1000,
+					})
+					return
+				}
+				let user = await this.$store.dispatch('user/getUserInfo', true)
+
+				setTimeout(() => {
+					let vm = this;
+					async function a() {
+						await vm.$store.dispatch('user/getUserInfo')
+						await vm.$store.dispatch('user/getLoginParams')
+						await vm.$store.dispatch('course/getCourseList', true)
+						await vm.$store.dispatch('course/refreshActivitiesOfAllCourse')
+						uni.unPreloadPage({
+							url: "/pages/activity/activity"
+						})
+						uni.unPreloadPage({
+							url: "/pages/user/user"
+						})
+						uni.preloadPage({
+							url: "/pages/activity/activity"
+						});
+						uni.preloadPage({
+							url: "/pages/user/user"
+						});
+					}
+					a()
+				}, 0)
+				this.$refs.uToast.show({
+					message: `你好，${user.name}`,
+					type: 'success',
+					duration: 1000,
+					complete() {
+						setTimeout(function() {
+							uni.navigateBack({
+
+							})
+						}, 500);
+					}
+				})
+			}
+		},
+	}
+</script>
+
+<style lang="scss" scoped>
+	.u--form {
+		padding: 10px 20px;
+	}
+</style>
