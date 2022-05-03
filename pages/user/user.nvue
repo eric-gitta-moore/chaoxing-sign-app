@@ -1,0 +1,141 @@
+<template>
+	<list class="list" :offset-accuracy="5">
+		<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown"
+			:display="refreshing ? 'show' : 'hide'">
+			<div class="refresh-view">
+				<text class="loading-text">{{refreshText}}</text>
+			</div>
+		</refresh>
+		<cell>
+			<view class="container">
+				<view class="main">
+					<view class="avatar">
+						<u-avatar :src="avatar" class="avatarImg" size="150"></u-avatar>
+					</view>
+					<view>
+						<u--text :text="`姓名：${name}`" size="20"></u--text>
+					</view>
+					<view>
+						<u--text :text="`性别：${sex}`" size="20"></u--text>
+					</view>
+					<view>
+						<u--text :text="`学号：${numberCard}`" size="20"></u--text>
+					</view>
+					<view>
+						<u--text :text="`手机号：${phone}`" size="20"></u--text>
+					</view>
+					<view>
+						<u--text :text="`学校：${school}`" size="20"></u--text>
+					</view>
+				</view>
+				<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
+			</view>
+		</cell>
+	</list>
+</template>
+
+<script>
+	import UserBiz from '@/biz/user.js'
+	import UserEntity from '@/entity/User.js'
+	import {
+		mapGetters
+	} from 'vuex'
+
+	export default {
+		data() {
+			return {
+				refreshing: false,
+				refreshText: "",
+			};
+		},
+		computed: {
+			avatar() {
+				return this.userInfo?.avatar
+			},
+			name() {
+				return this.userInfo?.name
+			},
+			sex() {
+				return this.userInfo?.sex
+			},
+			phone() {
+				return this.userInfo?.phone
+			},
+			school() {
+				return this.userInfo?.school
+			},
+			numberCard() {
+				return this.userInfo?.name
+			},
+			...mapGetters({
+				userInfo: 'user/userEntity'
+			})
+		},
+		methods: {
+			toLogin() {
+				uni.navigateTo({
+					url: 'login'
+				})
+			},
+			async initUserInfo() {
+				await this.$store.dispatch('user/getUserInfo')
+			},
+			onrefresh(e) {
+				if (this.refreshing) {
+					return;
+				}
+				this.refreshing = true;
+				this.refreshText = "刷新中...";
+				this.$store.dispatch('user/getUserInfo', true).then(() => {
+					this.refreshing = false;
+					this.refreshText = "已刷新";
+					console.log(this.userInfo)
+				})
+			},
+			onpullingdown(e) {
+				if (this.refreshing) {
+					return;
+				}
+				this.pulling = false;
+				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
+					this.refreshText = "释放立即刷新";
+				} else {
+					this.refreshText = "下拉可以刷新";
+				}
+			},
+		},
+		created() {
+			this.initUserInfo()
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.refresh-view {
+		width: 750rpx;
+		height: 80px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		.loading-text {
+			font-size: 14px;
+		}
+	}
+
+	.list {
+		flex: 1;
+	}
+	.container {
+		padding: 20px;
+
+		.avatar {
+			justify-content: center;
+			margin: 10rpx 0 30rpx 0;
+			flex-direction: row;
+		}
+
+		.loginBtn {
+			margin-top: 15px;
+		}
+	}
+</style>

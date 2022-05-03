@@ -1,0 +1,512 @@
+<template>
+	<list class="list" :offset-accuracy="5">
+		<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown"
+			:display="refreshing ? 'show' : 'hide'">
+			<view class="refresh-view">
+				<text class="loading-text">{{refreshText}}</text>
+			</view>
+		</refresh>
+		<cell v-for="(item, index) in activityList" :key="item.id">
+			<view class="list-item" :class="isFirst(index)">
+				<view class="list-item-header" @click="listItemHeaderOnClickEvent(item)">
+					<view class="item-img">
+						<u-image class="item-img-img" :src="item.logo"></u-image>
+					</view>
+					<view class="item-summary">
+						<u--text class="summary" :text="clearNewLine(item.nameOne)" :lines="1" wordWrap="anywhere">
+						</u--text>
+						<u--text class="time" color="#9c9c9c" :text="item.nameFour"></u--text>
+					</view>
+				</view>
+				<u-line margin="5px"></u-line>
+				<view class="list-item-body">
+					<view class="detail-item" v-if="courseId===0">
+						<u--text :text="`科目：`+item.courseInfo.name"></u--text>
+					</view>
+					<view class="detail-item">
+						<u--text :text="`活动ID：${item.id}`"></u--text>
+					</view>
+					<view class="detail-item" v-if="item.otherId!==null">
+						<u--text :text="`otherId：`+item.otherId"></u--text>
+					</view>
+					<view class="detail-item">
+						<u--text :text="`开始时间：`+dateFormat(item.startTime)"></u--text>
+					</view>
+					<view class="detail-item" v-if="String(item.endTime).trim()!==''">
+						<u--text :text="`结束时间：`+dateFormat(item.endTime)"></u--text>
+					</view>
+				</view>
+			</view>
+		</cell>
+	</list>
+</template>
+
+<script>
+	import {
+		mapGetters
+	} from 'vuex'
+	import DateHelper from '@/util/DateHelper.js'
+	import CourseBiz from '@/biz/course.js'
+	import ActivityEntity from '@/entity/Activity.js'
+	import Constant from '@/const.js'
+
+	export default {
+		props: {
+			courseId: {
+				type: Number,
+				required: true
+			},
+			uToast: {
+				required: true
+			}
+		},
+		data() {
+			return {
+				scrollable: true,
+				dataList: [],
+				refreshing: false,
+				refreshText: "",
+				activityList: [],
+				checkedActivity: {},
+
+				actionSheetIsShow: false,
+				actionSheetActions: ['普通签到', '拍照签到'],
+			}
+		},
+		computed: {
+			...mapGetters({
+				allActivities: 'course/allActivities',
+			})
+		},
+		methods: {
+			/**
+			 * @description 判断当前元素是否为第一个
+			 * 修复上下编辑只能有一个的bug
+			 * @param {Number} index
+			 */
+			isFirst: index => index === 0 ? 'first-item' : '',
+
+			/**
+			 * @description 格式化字符串
+			 * @param {String} date 时间字符串
+			 */
+			dateFormat(date) {
+				return DateHelper.format(new Date(date), 'yyyy-MM-dd hh:mm:ss')
+			},
+
+			/**
+			 * @description 列表项目被点击事件
+			 * @param {ActivityEntity} activity
+			 */
+			listItemHeaderOnClickEvent(activity) {
+				if (!activity?.otherId) return;
+				this.chooseSignType(activity)
+			},
+			loadData() {
+				// 首次激活时被调用
+			},
+			clear() {
+				// 释放数据时被调用，参考 swiper-list 缓存配置
+				this.dataList.length = 0;
+			},
+
+			/**
+			 * @description 下拉刷新完成事件
+			 * @param {Object} e
+			 */
+			onrefresh(e) {
+				this.refreshing = true;
+				this.refreshText = "刷新中...";
+				// setTimeout(() => {
+				// 	this.refreshing = false;
+				// 	this.refreshText = "已刷新";
+				// }, 2000)
+				this.freshActivity().then(() => {
+					this.refreshing = false;
+					this.refreshText = "已刷新";
+				})
+			},
+
+			/**
+			 * @description 下拉事件，但是没有完成整个下拉操作
+			 * @param {Object} e
+			 */
+			onpullingdown(e) {
+				if (this.refreshing) {
+					return;
+				}
+
+				this.pulling = false;
+				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
+					this.refreshText = "释放立即刷新";
+				} else {
+					this.refreshText = "下拉可以刷新";
+				}
+			},
+
+			/**
+			 * @description 刷新所有活动
+			 */
+			async freshActivity() {
+				let a = await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
+				this.updateActivityList()
+			},
+
+			/**
+			 * @description 刷新当前页面活动
+			 */
+			async updateActivityList() {
+				if (this.courseId != 0)
+					this.activityList = this.$store.getters['course/oneActivities'](this.courseId)
+				else {
+					let list = this.$store.getters['course/allActivities']
+					// debugger
+					list.sort((a, b) => Number(b.startTime) - Number(a.startTime))
+					this.activityList = list
+				}
+				console.log(this.activityList)
+			},
+
+			/**
+			 * @description 清空文本换行符
+			 */
+			clearNewLine: text => text.replace(/\r/g, "").replace(/\n/g, ""),
+
+			// ...mapGetters({
+			// 	oneActivities: 'course/oneActivities',
+			// })
+
+			/**
+			 * @description 确认签到的类型
+			 * @param {ActivityEntity} activity
+			 */
+			chooseSignType(activity) {
+				this.checkedActivity = activity
+				switch (Number(activity.otherId)) {
+					case 2: // 二维码签到
+						uni.showActionSheet({
+							title: '请选择获取二维码信息的方法',
+							itemList: ['选择二维码图片', '直接输入enc'],
+							success: r => {
+								if (Number(r.tapIndex) === 0) {
+									uni.chooseImage({
+										count: 1,
+										success: (res) => {
+											console.log(res)
+											plus.barcode.scan(res.tempFilePaths[0],
+												(type, code) => {
+													console.log(code)
+													let reg = /&enc=(?<enc>[\w\d]+)/
+													if (!reg.test(code)) {
+														uni.showToast({
+															title: '解码失败',
+															icon: 'error'
+														})
+														return null
+													}
+													let regResult = reg.exec(code)
+													console.log(regResult)
+													let enc = regResult.groups.enc
+													console.log(enc)
+													this.allInOneSign(
+														Constant.signType.QRCodeSign,
+														this.checkedActivity, {
+															enc
+														})
+												}, (error) => {
+													console.log(error)
+													uni.showToast({
+														title: '扫码失败',
+														icon: 'error'
+													})
+												})
+										}
+									})
+								} else {
+									uni.showModal({
+										content: '请输入签到二维码扫描出来的内容',
+										editable: true,
+										success: (res) => {
+											let enc = res.content
+											console.log(res.content)
+											let encReg = /&enc=(\w+)/mi
+											if (encReg.test(res.content))
+												enc = encReg.exec(res.content)[1]
+											if (res.confirm)
+												this.allInOneSign(
+													Constant.signType.QRCodeSign,
+													this.checkedActivity, {
+														enc
+													})
+										}
+									})
+								}
+							}
+						})
+						break
+					case 4: // 位置签到
+						uni.chooseLocation({
+							success: (res) => {
+								console.log('位置名称：' + res.name);
+								console.log('详细地址：' + res.address);
+								console.log('纬度：' + res.latitude);
+								console.log('经度：' + res.longitude);
+								this.allInOneSign(Constant.signType.locationSign, this.checkedActivity, {
+									address: res.address,
+									latitude: res.latitude,
+									longitude: res.longitude
+								})
+							}
+						});
+						break
+					case 3: // 手势签到
+					case 5: // 签到码签到
+						this.allInOneSign(Constant.signType.generalSign, this.checkedActivity)
+						break
+					case 0: // 拍照签到 或者 普通签到
+						uni.showActionSheet({
+							title: '请选择签到类型',
+							itemList: this.actionSheetActions,
+							success: this.onActionSheetSelect
+						})
+						break
+
+				}
+			},
+
+
+			/**
+			 * @description 所有签到统一处理
+			 * @param {String} type
+			 * @param {ActivityEntity} activity
+			 * @param {Object} params
+			 */
+			async allInOneSign(type, activity, params = {}) {
+				console.log('allInOneSign.type', type)
+				let result = null,
+					isShowToast = true;
+				uni.showLoading({
+					title: '签到中',
+					mask: true,
+				})
+				switch (type) {
+					case Constant.signType.generalSign:
+						result = await CourseBiz.generalSign(this, activity)
+						break;
+					case Constant.signType.photoSign:
+						let uploadData = await CourseBiz.chaoxingPanUpload(this, activity, params.filePath)
+						result = '上传失败'
+						if (uploadData) {
+							result = '取消签到'
+							isShowToast = false
+							uni.getImageInfo({
+								src: uploadData.previewUrl,
+								success: (image) => {
+									uni.hideLoading()
+									uni.showModal({
+										title: '提示',
+										content: '上传图片成功，请长按继续操作',
+										success: () => {
+											uni.previewImage({
+												current: 0,
+												urls: [image.path],
+												longPressActions: {
+													itemList: ['选择该图片签到', '取消签到'],
+													success: (res) => {
+														console.log(res)
+														if (Number(res
+																.tapIndex) !== 0) {
+															uni.closePreviewImage()
+															uni.showToast({
+																title: '取消签到',
+																icon: 'none'
+															})
+															return null;
+														}
+														uni.closePreviewImage()
+														uni.showLoading({
+															title: '签到中',
+															mask: true,
+														})
+
+														CourseBiz.photoSign(
+															this,
+															this
+															.checkedActivity,
+															uploadData.objectId
+														).then((
+															responseData
+														) => {
+															setTimeout(
+																() => {
+																	uni.hideLoading()
+																	if (responseData !==
+																		true
+																	) {
+																		uni.showToast({
+																			title: responseData,
+																			icon: 'none'
+																		})
+																		return null;
+																	}
+																	uni.showToast({
+																		title: '签到成功',
+																		icon: 'success'
+																	})
+																}, 500)
+														})
+
+													},
+												},
+											})
+										}
+									})
+								},
+								fail() {
+									uni.showToast({
+										title: '获取预览图失败',
+										icon: 'error'
+									})
+								}
+							})
+						}
+
+						// if (uploadData) {
+						// 	uni.previewImage({
+						// 		current: 0,
+						// 		urls: [uploadData.previewImage],
+						// 		longPressActions: {
+						// 			itemList: ['选择该图片签到', '取消签到'],
+						// 			success: (res) => {
+						// 				console.log(res)
+						// 			}
+						// 		}
+						// 	})
+						// }
+						// result = await CourseBiz.photoSign(this, activity, )
+						break;
+					case Constant.signType.QRCodeSign:
+						console.log('allInOneSign.params', params)
+						result = await CourseBiz.QRCodeSign(this, activity, params.enc)
+						break;
+					case Constant.signType.locationSign:
+						console.log('Constant.signType.locationSign', Constant.signType.locationSign)
+						result = await CourseBiz.locationSign(this, activity, {
+							address: params.address,
+							latitude: params.latitude,
+							longitude: params.longitude
+						})
+						break;
+					default:
+						console.log('没有匹配到签到类型', type)
+				}
+				console.log(result)
+
+				if (isShowToast) {
+					uni.hideLoading()
+					if (result !== true) {
+						uni.showToast({
+							title: result,
+							icon: 'none'
+						})
+						return null;
+					}
+					uni.showToast({
+						title: '签到成功',
+						icon: 'success'
+					})
+				}
+			},
+
+			/**
+			 * @description 从底部向上弹出操作菜单 操作选择成功之后
+			 * @param {Object} index
+			 */
+			onActionSheetSelect(index) {
+				switch (Number(index.tapIndex)) {
+					case 0:
+						// 普通签到
+						this.allInOneSign(Constant.signType.generalSign, this.checkedActivity)
+						break
+					case 1:
+						// 拍照签到
+						uni.chooseImage({
+							count: 1,
+							success: (res) => {
+								console.log(res)
+								this.allInOneSign(Constant.signType.photoSign, this.checkedActivity, {
+									filePath: res.tempFilePaths[0]
+								})
+							}
+						})
+						break
+
+				}
+			},
+
+
+		},
+		mounted() {
+			this.updateActivityList()
+		}
+	}
+</script>
+
+<style lang="scss" scoped>
+	.refresh-view {
+		width: 750rpx;
+		height: 80px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+
+		.loading-text {
+			font-size: 14px;
+		}
+	}
+
+	.list {
+		flex: 1;
+		background-color: #ebebeb;
+	}
+
+	.first-item {
+		margin-top: 12px;
+	}
+
+	.list-item {
+		margin-left: 12px;
+		margin-right: 12px;
+		margin-bottom: 12px;
+		padding: 10px;
+		background-color: #fff;
+		border-radius: 5px;
+
+		.list-item-header {
+
+			flex-direction: row;
+
+			.item-img {
+				justify-content: center;
+
+				.item-img-img {
+					width: 50px;
+					height: 50px;
+				}
+			}
+
+			.item-summary {
+				flex-direction: column;
+				width: 600rpx;
+				margin-left: 5px;
+			}
+		}
+
+		.list-item-body {
+
+			.detail-item {
+				flex-direction: row;
+			}
+		}
+	}
+</style>
