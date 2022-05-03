@@ -58,6 +58,7 @@
 | https://github.com/aihuahua-522/chaoxing-testforAndroid | Java       | 学习通（超星）自动签到                         |
 | https://github.com/yuban10703/chaoxingsign              | Python     | 超星学习通自动签到                             |
 | https://github.com/SSmJaE/XueXiTonsSign_Electron        | TypeScript | 基于Electron，桌面端，GUI，签到队列            |
+| https://github.com/w964522982/xxtSign                   | Python     | 学习通自动签到,普通\|拍照\|位置\|手势\|签到码  |
 
 
 
