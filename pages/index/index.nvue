@@ -115,19 +115,13 @@
 						url: "/pages/user/user"
 					});
 				} catch (e) {
-					uni.showToast({
-						title: '请先登录',
-						icon: 'error'
-					})
+					plus.nativeUI.toast('请先登录')
 					uni.navigateTo({
 						url: '/pages/user/login'
 					})
 				}
 				if (this.$store.state.user.cookies.length === 0) {
-					uni.showToast({
-						title: '请先登录',
-						icon: 'error'
-					})
+					plus.nativeUI.toast('请先登录')
 					uni.navigateTo({
 						url: '/pages/user/login'
 					})

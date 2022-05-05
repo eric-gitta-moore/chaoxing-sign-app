@@ -198,10 +198,7 @@
 													console.log(code)
 													let reg = /&enc=(?<enc>[\w\d]+)/
 													if (!reg.test(code)) {
-														uni.showToast({
-															title: '解码失败',
-															icon: 'error'
-														})
+														plus.nativeUI.toast('解码失败')
 														return null
 													}
 													let regResult = reg.exec(code)
@@ -215,10 +212,7 @@
 														})
 												}, (error) => {
 													console.log(error)
-													uni.showToast({
-														title: '扫码失败',
-														icon: 'error'
-													})
+													plus.nativeUI.toast('扫码失败')
 												})
 										}
 									})
@@ -317,10 +311,8 @@
 														if (Number(res
 																.tapIndex) !== 0) {
 															uni.closePreviewImage()
-															uni.showToast({
-																title: '取消签到',
-																icon: 'none'
-															})
+															plus.nativeUI.tosat(
+																'取消签到')
 															return null;
 														}
 														uni.closePreviewImage()
@@ -343,16 +335,16 @@
 																	if (responseData !==
 																		true
 																	) {
-																		uni.showToast({
-																			title: responseData,
-																			icon: 'none'
-																		})
+																		plus.nativeUI
+																			.toast(
+																				responseData
+																			)
 																		return null;
 																	}
-																	uni.showToast({
-																		title: '签到成功',
-																		icon: 'success'
-																	})
+																	plus.nativeUI
+																		.toast(
+																			'签到成功'
+																		)
 																}, 500)
 														})
 
@@ -363,10 +355,7 @@
 									})
 								},
 								fail() {
-									uni.showToast({
-										title: '获取预览图失败',
-										icon: 'error'
-									})
+									plus.nativeUI.toast('获取预览图失败')
 								}
 							})
 						}
@@ -405,16 +394,10 @@
 				if (isShowToast) {
 					uni.hideLoading()
 					if (result !== true) {
-						uni.showToast({
-							title: result,
-							icon: 'none'
-						})
+						plus.nativeUI.toast(result)
 						return null;
 					}
-					uni.showToast({
-						title: '签到成功',
-						icon: 'success'
-					})
+					plus.nativeUI.toast('签到成功')
 				}
 			},
 
