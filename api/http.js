@@ -1,4 +1,7 @@
-const http = uni.$u.http
+// const http = uni.$u.http
+import Request from '@/js_sdk/luch-request/luch-request/index.js' // 下载的插件
+const http = new Request();
+
 http.interceptors.request.use((r) => {
 	r.header = {
 		...r.header,
