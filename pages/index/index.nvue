@@ -53,13 +53,18 @@
 			return {
 				refreshText: "",
 				refreshing: false,
-				appId: '626f7bfb2a9fda0001d92d17'
+				appId: '626f7bfb2a9fda0001d92d17',
+				timer: null,
 			}
 		},
 		computed: {
-			...mapState({
-				courseList: state => state.course.courseList
-			})
+			// ...mapState({
+			// 	courseList: state => state.course.courseList
+			// })
+			courseList() {
+				console.log('this.$store?.state?.course?.courseList', this.$store?.state?.course?.courseList)
+				return this.$store?.state?.course?.courseList
+			}
 		},
 		methods: {
 			/**
@@ -102,7 +107,9 @@
 			/**
 			 * @description 初始化所有数据
 			 */
-			async initData() {
+			async initData(timer) {
+				if (this.timer) return;
+				this.timer = timer
 				try {
 					await this.$store.dispatch('user/getUserInfo')
 					await this.$store.dispatch('user/getLoginParams')
@@ -127,6 +134,9 @@
 					})
 				}
 				console.log('打架了发送到看了副经理京东方', this)
+
+				clearInterval(timer)
+				this.timer = null
 			},
 			/**
 			 * @description 检查更新确认确实有更新
@@ -149,8 +159,15 @@
 			}
 
 		},
-		mounted() {
-			this.initData()
+		onLoad() {
+			//启用了fast模式如果直接执行会报错，找不到store，只能这样弄个定时器一直跑咯
+			let timer = setInterval(() => {
+				if (this.$store?.state) {
+					console.log('timer', timer)
+					this.initData(timer)
+					// clearInterval(timer)
+				}
+			}, 100)
 		}
 	}
 </script>
