@@ -1,0 +1,13 @@
+{
+    "id": "luch-request",
+    "name": "luch-request",
+    "version": "3.0.7",
+    "description": "基于Promise开发的跨平台、项目级别的请求库，它有更小的体积，易用的api，方便简单的自定义能力",
+    "keywords": [
+        "request",
+        "axios",
+        "网络请求",
+        "拦截器",
+        "promise"
+    ]
+}

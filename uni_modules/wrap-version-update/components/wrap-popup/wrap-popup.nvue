@@ -1,0 +1,159 @@
+<template>
+	<view class="z-index view">
+		<wrap-transition @click="onMask" :mode-class="['fade']" :style-custom="maskClass" :show="isShow">
+		</wrap-transition>
+		<wrap-transition @change="onChange" :mode-class="popupData[direction].modeClass"
+			:style-custom="popupData[direction].popupClass" :show="isShow">
+			<slot></slot>
+		</wrap-transition>
+	</view>
+</template>
+
+<script>
+	/**
+	 * popup 弹出层
+	 * @description 弹出层组件
+	 * @tutorial https://dnvue.dengqichang.cn/component/feedback_component/n-popup.html
+	 * @property {Boolean} show 控制显示或者隐藏
+	 * @property {String} direction 弹出层方向
+	 *  @value top 顶部弹出
+	 *  @value bottom 底部弹出
+	 *  @value left 左侧弹出
+	 *  @value right 右侧弹出
+	 *  @value center 中间弹出
+	 * @property {Boolean} mask-close 点击遮罩层是否可关闭
+	 * @event {Function()} change 当打开或者关闭时返回弹出层状态
+	 */
+	import wrapTransition from './wrap-transition.nvue'
+	export default {
+		name: 'nPopup',
+		components: {
+			wrapTransition
+		},
+		props: {
+			show: {
+				type: Boolean, //控制显示或者隐藏
+				default: false
+			},
+			direction: {
+				type: String, //弹出层方向
+				default: "bottom"
+			},
+			maskClose: {
+				type: Boolean, //点击遮罩层是否可关闭
+				default: true
+			}
+		},
+		data() {
+			return {
+				isShow: false,
+				//遮罩层
+				maskClass: {
+					'position': 'fixed',
+					'bottom': 0,
+					'top': 0,
+					'left': 0,
+					'right': 0,
+					'backgroundColor': 'rgba(0, 0, 0, 0.4)'
+				},
+				popupData: {
+					top: {
+						modeClass: ['slide-top', 'fade'],
+						popupClass: {
+							'position': 'fixed',
+							'left': 0,
+							'right': 0,
+							'top': 0,
+							'backgroundColor': '#FFFFFF'
+						}
+					},
+					bottom: {
+						modeClass: ['slide-bottom', 'fade'],
+						popupClass: {
+							'position': 'fixed',
+							'left': 0,
+							'right': 0,
+							'bottom': 0,
+							'backgroundColor': '#FFFFFF'
+						}
+					},
+					left: {
+						modeClass: ['slide-left', 'fade'],
+						popupClass: {
+							'position': 'fixed',
+							'bottom': 0,
+							'top': 0,
+							'left': 0,
+							'backgroundColor': '#FFFFFF'
+						}
+					},
+					right: {
+						modeClass: ['slide-right', 'fade'],
+						popupClass: {
+							'position': 'fixed',
+							'bottom': 0,
+							'top': 0,
+							'right': 0,
+							'backgroundColor': '#FFFFFF'
+						}
+					},
+					center: {
+						modeClass: ['fade', 'zoom-in'],
+						popupClass: {
+							'position': 'fixed',
+							'bottom': 0,
+							'left': 0,
+							'right': 0,
+							'top': 0,
+							'justifyContent': 'center',
+							'alignItems': 'center'
+						}
+					}
+				}
+			};
+		},
+		watch: {
+			show: {
+				handler(newVal) {
+					if (newVal) {
+						this.open()
+					} else {
+						this.close()
+					}
+				},
+				immediate: true
+			}
+		},
+		methods: {
+			//打开弹出层
+			open() {
+				this.isShow = true
+			},
+			//关闭弹出层
+			close(e) {
+				if (this.isShow) {
+					this.isShow = false
+				}
+			},
+			//点击关闭弹出层
+			onMask(e) {
+				console.log('点击了onMask', e)
+				if (this.maskClose) {
+					if (this.isShow) {
+						this.isShow = false
+					}
+				}
+			},
+			//当打开或者关闭返回信息
+			onChange(e) {
+				this.$emit("change", {
+					detail: e.detail
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	@import "../../css/index.scss";
+</style>

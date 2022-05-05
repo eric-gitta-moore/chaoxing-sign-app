@@ -1,0 +1,381 @@
+<template>
+	<wrap-popup :show="show" direction="center" :mask-close="release.isForceUpdate">
+		<view class="view box-size">
+			<image :src="bgImage?bgImage:defaultBgImg" class="box-size absolute"></image>
+			<view class="view box-size absolute desc line-4">
+				<wrap-text :color="textColor" :text="release.description" :lines="lines"></wrap-text>
+			</view>
+			<view class="absolute footer" :style="{marginTop:`${release.isForceUpdate?540:520}rpx`}">
+				<wrap-button size="32" :disabled="!btnVisible" @click="handleUpdate" :color="btnTextColor"
+					:background="btnBgColor" width="400" radius="40" :text="btnText"></wrap-button>
+				<view v-if="!release.isForceUpdate && btnVisible" class="items-center" style="margin-top: 2rpx;">
+					<view style="padding: 2rpx 20rpx" @click="show=false">
+						<wrap-text :color="secondaryBtnTextColor" :text="secondaryBtnText"></wrap-text>
+					</view>
+				</view>
+				<view v-if="!btnVisible" style="margin-top: 10rpx;">
+					<progress :percent="percent" :color="btnBgColor"></progress>
+				</view>
+			</view>
+		</view>
+	</wrap-popup>
+</template>
+<script>
+	import {
+		getVersion,
+		checkUpdate,
+		restart,
+		downloadFile
+	} from '../../js/api.js'
+	import wrapButton from '../wrap-button/wrap-button'
+	import defaultBgImg from '../../js/img.js'
+	/**
+	 * version-update 版本更新
+	 * @description 版本更新组件
+	 * @property {String} id 应用id
+	 * @property {String} version 是否手动传入版本号而不使用系统自动获取的版本
+	 * @property {Boolean} loading 是否显示加载
+	 * @property {String} loadingText 加载中文本，默认'检查更新中'
+	 * @property {String} loadingMask 加载点击遮罩关闭功能是否关闭
+	 * @property {String, Number} loadingDelay 加载框多久出现，默认1500ms
+	 * @property {String, Number} lines 超出行省略
+	 *
+	 * @property {String, Number} btnBgColor 按钮背景颜色
+	 * @property {String, Number} btnTextColor 按钮文字颜色
+	 * @property {String, Number} secondaryBtnText 暂不更新按钮文字，默认以后再说
+	 * @property {String, Number} secondaryBtnTextColor 暂不更新按钮文字颜色
+	 * 
+	 * @property {String, Number} textColor 更新说明文字颜色
+	 * @property {String, Number} bgImage 自定义背景图
+	 * 
+	 * @property {String, Number} errTimes 安装错误次数超过此值提示打开浏览器下载，一般若由高版本降回低版本会出现无法安装的情况
+	 * @property {String, Number} auto 是否自动检查新版本，默认true
+	 * 
+	 * @event {Function()} check 检查事件,获取到版本数据就会触发,适合需要自定义更新弹窗出现逻辑的
+	 * @event {Function()} finish 完成事件,获取到版本且不用更新触发
+	 * @event {Function()} error 错误事件,发生错误触发
+	 */
+	export default {
+		name: 'wrapVersionUpdate',
+		props: {
+			// 重要！必改！应用id，从WrapStore后台获取，后台地址：https://apps.seepine.com/
+			// 其中应用的id填充下方id即可
+			id: {
+				type: String, //应用id
+				default: ''
+			},
+			// 接口地址
+			apiUrl: {
+				type: String,
+				default: 'https://ed2bb32b-5553-4785-9bec-047aef8f37f3.bspapp.com/check'
+			},
+			// 加载配置，分别是：是否显示加载、加载文字、是否mask、延迟出现时间
+			loading: {
+				type: Boolean,
+				default: true
+			},
+			loadingText: {
+				type: String,
+				default: '检查更新中'
+			},
+			loadingMask: {
+				type: Boolean,
+				default: true
+			},
+			loadingDelay: {
+				type: [String, Number],
+				default: 1500
+			},
+			lines: {
+				type: Number,
+				default: 4
+			},
+			// 若需要手动传当前app版本号，可传入此值
+			version: {
+				type: String
+			},
+			bgImage: {
+				type: String
+			},
+			textColor: {
+				type: String,
+				default: '#1e1e1e'
+			},
+			btnBgColor: {
+				type: String,
+				default: '#0a84ec'
+			},
+			btnTextColor: {
+				type: String,
+				default: '#FFFFFF'
+			},
+			secondaryBtnText: {
+				type: String,
+				default: '以后再说'
+			},
+			secondaryBtnTextColor: {
+				type: String,
+				default: '#afafaf'
+			},
+			errToast: {
+				type: Boolean,
+				default: true
+			},
+			errTimes: {
+				type: Number,
+				default: 2
+			},
+			auto: {
+				type: Boolean,
+				default: true
+			}
+		},
+		components: {
+			wrapButton
+		},
+		data() {
+			return {
+				show: false,
+				release: {
+					"needUpdate": true,
+					"forceUpdate": true,
+					isForceUpdate: true,
+					"version": "0.1.0",
+					"description": "",
+					"pkgUrl": "",
+					"wgtUrl": ""
+				},
+				btnVisible: true,
+
+				btnText: '立即升级',
+
+				percent: 0,
+				tempPath: '',
+				installFlag: false,
+
+				defaultBgImg: defaultBgImg,
+				nowVersion: '',
+
+				openCount: 0
+			}
+		},
+		computed: {
+			config: function() {
+				return {
+					id: this.id,
+					apiUrl: this.apiUrl,
+					loading: this.loading,
+					loadingText: this.loadingText,
+					loadingMask: this.loadingMask,
+					loadingDelay: this.loadingDelay
+				}
+			},
+			downUrl: function() {
+				if (!this.release.needUpdate) {
+					return undefined;
+				}
+				if (!this.release.isHbuildUpdate && this.release.wgtUrl !== '') {
+					return this.release.wgtUrl
+				}
+				return this.release.pkgUrl;
+			},
+			isHot: function() {
+				return !this.release.isHbuildUpdate && this.release.wgtUrl !== '';
+			}
+		},
+		created() {
+			if (!this.id) {
+				uni.showToast({
+					title: '请传入应用id',
+					icon: 'none',
+					duration: 4000
+				})
+				console.error('重要！必改！应用id必传，从WrapStore后台获取，后台地址：https://apps.seepine.com/')
+				return
+			}
+			if (this.auto) {
+				this.check()
+			}
+		},
+		methods: {
+			check() {
+				getVersion().then(version => {
+					this.nowVersion = version;
+					return checkUpdate(this.version ? this.version : version, this.config)
+				}).then(res => {
+					this.release = res;
+					this.$emit('check', res);
+					if (res.needUpdate) {
+						this.show = true;
+					} else {
+						if (res.isTest) {
+							uni.showToast({
+								title: '测试版' + (this.version ? this.version : this.nowVersion),
+								icon: 'none',
+								position: 'bottom'
+							})
+						}
+						this.$emit('finish', res);
+					}
+				}).catch(err => {
+					this.$emit('error', err);
+					if (this.errToast) {
+						uni.showToast({
+							title: err,
+							icon: 'none',
+							duration: 4000
+						})
+					}
+				})
+			},
+			handleUpdate() {
+				// 如果是ios并且非热更新
+				console.log(uni.getSystemInfoSync().platform)
+				if (uni.getSystemInfoSync().platform === 'ios' && !this.isHot) {
+					if (this.release.appleId) {
+						plus.runtime.launchApplication({
+							action: `itms-apps://itunes.apple.com/cn/app/id${this.release.appleId}?mt=8`
+						}, (e) => {
+							uni.showModal({
+								title: '跳转到appStore失败',
+								content: "请向app反馈，错误信息：" + e.message,
+								confirmText: "复制错误信息",
+								success: (res) => {
+									if (res.confirm) {
+										uni.setClipboardData({
+											data: e.message,
+											success: () => {}
+										})
+									}
+								}
+							})
+						});
+					} else {
+						uni.showToast({
+							title: '未配置appleId无法跳转到appStore，请向app反馈',
+							icon: 'none',
+							duration: 4000
+						})
+					}
+					return
+				}
+				if (this.tempPath !== '') {
+					this.openFile()
+					return;
+				}
+				if (this.btnVisible) {
+					this.btnVisible = false
+					downloadFile({
+						url: this.downUrl,
+						success: (filePath) => {
+							this.percent = 100
+							this.tempPath = filePath
+							this.btnText = '马上安装'
+							this.openFile()
+						},
+						fail: () => {
+							this.btnVisible = true
+						},
+						progress: (progress) => {
+							this.percent = progress
+						}
+					})
+				}
+			},
+			openFile: function() {
+				this.btnVisible = true;
+				if (!this.installFlag) {
+					this.installFlag = true
+					uni.showToast({
+						icon: 'none',
+						title: this.isHot ? '正在安装中' : '正在打开安装程序'
+					})
+					if (this.isHot) {
+						//热更新
+						plus.runtime.install(this.tempPath, {
+							force: false
+						}, function() {
+							uni.hideToast();
+							setTimeout(() => {
+								plus.runtime.restart();
+							}, 100)
+						}, function(e) {
+							uni.hideToast();
+							this.installFail();
+						});
+					} else {
+						setTimeout(() => {
+							uni.openDocument({
+								filePath: this.tempPath,
+								fail: (res) => {
+									this.installFail();
+								},
+								complete: () => {
+									uni.hideToast();
+									this.installFlag = false;
+									this.openCount++;
+									if (this.openCount > this.errTimes) {
+										this.installFail();
+									}
+								}
+							});
+						}, 500)
+					}
+				}
+			},
+			installFail() {
+				uni.showModal({
+					title: "温馨提醒",
+					content: "请问是否出现安装包损坏或其他原因导致无法正常安装新版本的情况?请前往浏览器下载最新版本手动安装",
+					confirmText: "立刻前往",
+					success: (res) => {
+						if (res.confirm) {
+							plus.runtime.openURL(
+								`https://ed2bb32b-5553-4785-9bec-047aef8f37f3.bspapp.com/http/app?id=${this.id}`,
+								() => {
+									this.openUrlFail();
+								});
+						}
+					}
+				})
+			},
+			openUrlFail() {
+				uni.showModal({
+					content: "打开浏览器失败,请复制下载地址,手动打开手机浏览器输入地址下载",
+					confirmText: "复制",
+					success: (res) => {
+						if (res.confirm) {
+							uni.setClipboardData({
+								data: `https://ed2bb32b-5553-4785-9bec-047aef8f37f3.bspapp.com/http/app?id=${this.id}`,
+								success: () => {}
+							})
+						}
+					}
+				})
+			}
+		}
+	}
+</script>
+<style scoped>
+	@import "../../css/index.scss";
+
+	.box-size {
+		width: 491rpx;
+		height: 653rpx;
+	}
+
+	.desc {
+		margin-top: 326rpx;
+		padding: 0 30rpx;
+		width: 431rpx;
+	}
+
+	.desc-text {
+		line-height: 44rpx;
+		font-size: 30rpx;
+	}
+
+	.footer {
+		margin-left: 50rpx;
+	}
+</style>
