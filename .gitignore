@@ -4,7 +4,6 @@ node_modules
 unpackage/cache
 unpackage/dist
 unpackage/release
-uni_modules
 
 
 # local env files

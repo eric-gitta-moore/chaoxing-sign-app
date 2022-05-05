@@ -1,0 +1,84 @@
+{
+  "id": "wrap-version-update",
+  "displayName": "【WrapUpdate】APP版本更新、支持wgt热更新、测试版本、跳转appStore等所有方式，提供后台管理支持版本控制",
+  "version": "2.0.1",
+  "description": "一行代码实现APP版本更新，更提供后台管理让版本的发布和迭代再也不用愁了，支持APP版本更新、支持wgt热更新、测试版本、跳转appStore、跳转浏览器下载等所有方式",
+  "keywords": [
+    "版本",
+    "更新",
+    "版本更新",
+    "热更新",
+    "wgt"
+],
+  "engines": {
+    "HBuilderX": "^3.1.0"
+  },
+  "dcloudext": {
+    "category": [
+        "前端组件",
+        "通用组件"
+    ],
+    "sale": {
+      "regular": {
+        "price": "0.00"
+      },
+      "sourcecode": {
+        "price": "0.00"
+      }
+    },
+    "contact": {
+      "qq": ""
+    },
+    "declaration": {
+      "ads": "无",
+      "data": "无",
+      "permissions": "无"
+    },
+    "npmurl": ""
+  },
+  "uni_modules": {
+    "dependencies": [],
+    "encrypt": [],
+    "platforms": {
+      "cloud": {
+        "tcb": "y",
+        "aliyun": "y"
+      },
+      "client": {
+        "App": {
+          "app-vue": "y",
+          "app-nvue": "y"
+        },
+        "H5-mobile": {
+          "Safari": "n",
+          "Android Browser": "n",
+          "微信浏览器(Android)": "n",
+          "QQ浏览器(Android)": "n"
+        },
+        "H5-pc": {
+          "Chrome": "n",
+          "IE": "n",
+          "Edge": "n",
+          "Firefox": "n",
+          "Safari": "n"
+        },
+        "小程序": {
+          "微信": "n",
+          "阿里": "n",
+          "百度": "n",
+          "字节跳动": "n",
+          "QQ": "n"
+        },
+        "快应用": {
+          "华为": "n",
+          "联盟": "n"
+        },
+        "Vue": {
+            "vue2": "y",
+            "vue3": "u"
+        }
+      }
+    }
+},
+"repository": ""
+}

@@ -1,0 +1,45 @@
+/* common */
+.view {
+    /* #ifndef APP-NVUE */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* #endif */
+}
+
+.flex-row {
+    flex-direction: row !important;
+    /* #ifndef APP-NVUE */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* #endif */
+}
+
+.items-center {
+    align-items: center !important;
+    /* #ifndef APP-NVUE */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* #endif */
+}
+
+.justify-center {
+    justify-content: center !important;
+    /* #ifndef APP-NVUE */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* #endif */
+}
+
+.absolute {
+    position: absolute;
+}
+
+//仅编译到vue页面
+ /* #ifndef APP-NVUE */
+.show-scrollbar ::-webkit-scrollbar {width: 0;height: 0;background-color: transparent;}
+.z-index{z-index: 999;}
+/* #endif */
