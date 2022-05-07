@@ -104,7 +104,7 @@
 				}
 			},
 		},
-		created() {
+		onLoad() {
 			this.initUserInfo()
 		}
 	}

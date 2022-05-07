@@ -106,39 +106,8 @@
                 }
             }
         },
-        "nvueLaunchMode" : "fast",
+        "nvueLaunchMode" : "",
         "renderer" : "native",
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    /* 快应用特有相关 */
-    "quickapp" : {},
-    /* 小程序特有相关 */
-    "mp-weixin" : {
-        "appid" : "",
-        "setting" : {
-            "urlCheck" : false
-        },
-        "usingComponents" : true,
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-alipay" : {
-        "usingComponents" : true,
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-baidu" : {
-        "usingComponents" : true,
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-toutiao" : {
-        "usingComponents" : true,
         "uniStatistics" : {
             "enable" : true
         }
@@ -146,30 +115,5 @@
     "uniStatistics" : {
         "enable" : true
     },
-    "vueVersion" : "2",
-    "h5" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-jd" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-kuaishou" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-lark" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-qq" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    }
+    "vueVersion" : "2"
 }

@@ -9,5 +9,8 @@ export default {
 		photoSign: 'photoSign',
 		locationSign: 'locationSign',
 		QRCodeSign: 'QRCodeSign',
+	},
+	globalEmitEvent:{
+		onSwitchToActivityTab:'onSwitchToActivityTab'
 	}
 }
