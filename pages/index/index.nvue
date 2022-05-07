@@ -38,7 +38,7 @@
 				</view>
 			</cell>
 		</list>
-		<wrap-version-update ref="wrapVersionUpdate" :id="appId" @check="onUpdateCheck" :auto="false">
+		<wrap-version-update ref="wrapVersionUpdate" :id="appId" @check="onUpdateCheck">
 		</wrap-version-update>
 	</view>
 </template>
