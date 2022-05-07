@@ -52,7 +52,7 @@ async function getUserInfo() {
 		console.log('sexReg.exec(html)', sexReg.exec(html))
 		if (sexReg.test(html))
 			sex = sexReg.exec(html)[1]
-		sex.replace('male','男').replace('female','女')
+		sex.replace('female','女').replace('male','男')
 
 	} catch (e) {
 		console.warn(e)
