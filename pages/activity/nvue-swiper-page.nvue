@@ -294,90 +294,21 @@
 						break;
 					case Constant.signType.photoSign:
 						let uploadData = await CourseBiz.chaoxingPanUpload(this, activity, params.filePath)
-						result = '上传失败'
 						if (uploadData) {
-							result = '取消签到'
 							isShowToast = false
-							uni.getImageInfo({
-								src: uploadData.previewUrl,
-								success: (image) => {
-									uni.hideLoading()
-									uni.showModal({
-										title: '提示',
-										content: '上传图片成功，请长按继续操作',
-										success: () => {
-											uni.previewImage({
-												current: 0,
-												urls: [image.path],
-												longPressActions: {
-													itemList: ['选择该图片签到', '取消签到'],
-													success: (res) => {
-														console.log(res)
-														if (Number(res
-																.tapIndex) !== 0) {
-															uni.closePreviewImage()
-															plus.nativeUI.tosat(
-																'取消签到')
-															return null;
-														}
-														uni.closePreviewImage()
-														uni.showLoading({
-															title: '签到中',
-															mask: true,
-														})
-
-														CourseBiz.photoSign(
-															this,
-															this
-															.checkedActivity,
-															uploadData.objectId
-														).then((
-															responseData
-														) => {
-															setTimeout(
-																() => {
-																	uni.hideLoading()
-																	if (responseData !==
-																		true
-																	) {
-																		plus.nativeUI
-																			.toast(
-																				responseData
-																			)
-																		return null;
-																	}
-																	plus.nativeUI
-																		.toast(
-																			'签到成功'
-																		)
-																}, 500)
-														})
-
-													},
-												},
-											})
-										}
-									})
-								},
-								fail() {
-									plus.nativeUI.toast('获取预览图失败')
+							CourseBiz.photoSign(
+								this,
+								this.checkedActivity,
+								uploadData.objectId
+							).then((responseData) => {
+								uni.hideLoading()
+								if (responseData !== true) {
+									plus.nativeUI.toast(responseData)
+									return null;
 								}
+								plus.nativeUI.toast('签到成功')
 							})
 						}
-
-						// if (uploadData) {
-						// 	uni.previewImage({
-						// 		current: 0,
-						// 		urls: [uploadData.previewImage],
-						// 		longPressActions: {
-						// 			itemList: ['选择该图片签到', '取消签到'],
-						// 			success: (res) => {
-						// 				console.log(res)
-						// 			}
-						// 		}
-						// 	})
-						// }
-						// result = await CourseBiz.photoSign(this, activity, )
 						break;
 					case Constant.signType.QRCodeSign:
 						console.log('allInOneSign.params', params)
