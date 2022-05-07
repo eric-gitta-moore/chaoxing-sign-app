@@ -45,13 +45,14 @@ async function getUserInfo() {
 			avatar = avatarReg.exec(html)[1]
 
 		let schoolReg = /<ul class="listCon" id="messageFid">\s+<li> (\S+)/mi
-		console.log('schoolReg.exec(html)', schoolReg.exec(html))
 		if (schoolReg.test(html))
 			school = schoolReg.exec(html)[1]
 
-		let sexReg = /value="1"><\/i>(男|女)\s<\/span>/mi
+		let sexReg = /value="1"><\/i>(男|女|male|female)\s*<\/span>/mi
+		console.log('sexReg.exec(html)', sexReg.exec(html))
 		if (sexReg.test(html))
 			sex = sexReg.exec(html)[1]
+		sex.replace('male','男').replace('female','女')
 
 	} catch (e) {
 		console.warn(e)
