@@ -7,9 +7,9 @@
 					<text class="loading-text">{{refreshText}}</text>
 				</div>
 			</refresh>
-			<cell v-for="(v,k) in courseList" :key="v.courseId">
+			<cell v-for="(v,i) in courseList" :key="v.courseId">
 				<view class="card">
-					<view class="title">
+					<view class="title" @click="onCardClick(v.courseId,i)">
 						<image mode="aspectFill" class="img" :src="v.img"></image>
 						<view class="sum">
 							<text>{{v.name}}</text>
@@ -38,13 +38,14 @@
 				</view>
 			</cell>
 		</list>
-		<wrap-version-update ref="wrapVersionUpdate" :id="appId" @check="onUpdateCheck">
+		<wrap-version-update ref="wrapVersionUpdate" :id="appId" @check="onUpdateCheck" :auto="false">
 		</wrap-version-update>
 	</view>
 </template>
 
 <script>
 	import courseBiz from '@/biz/course.js';
+	import Constant from '@/const.js'
 	import {
 		mapState
 	} from 'vuex'
@@ -68,6 +69,23 @@
 		},
 		methods: {
 			/**
+			 * @description 课程列表卡片被点击，跳转到签到页面
+			 */
+			onCardClick(courseId, index) {
+				uni.$emit(Constant.globalEmitEvent.onSwitchToActivityTab, {
+					courseId,
+					index
+				})
+				uni.$u.route({
+					url: 'pages/activity/activity',
+					type: 'tab',
+					params: {
+						courseId,
+						index
+					}
+				})
+			},
+			/**
 			 * @description 普通文字转富文本
 			 * @param {String} text
 			 */
@@ -87,6 +105,10 @@
 				await this.$store.dispatch('course/getCourseList', force)
 				console.log('refreshCourseList', this.courseList)
 			},
+			/**
+			 * @description 下拉刷新中
+			 * @param {Object} e
+			 */
 			onpullingdown(e) {
 				if (this.refreshing) return;
 				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
@@ -95,6 +117,10 @@
 					this.refreshText = '下拉可以刷新'
 				}
 			},
+			/**
+			 * @description 下拉刷新完成
+			 * @param {Object} e
+			 */
 			onrefresh(e) {
 				if (this.refreshing) return;
 				this.refreshing = true;
@@ -108,7 +134,7 @@
 			 * @description 初始化所有数据
 			 */
 			async initData(timer) {
-				if (this.timer) return;
+				if (this.timer !== null) return;
 				this.timer = timer
 				try {
 					await this.$store.dispatch('user/getUserInfo')
@@ -156,18 +182,23 @@
 						}
 					}
 				})
+			},
+			async timerLoop() {
+				this.timer = null
+				//启用了fast模式如果直接执行会报错，找不到store，只能这样弄个定时器一直跑咯
+				let timer = setInterval(() => {
+					console.log('timer', timer, this.$store?.state)
+					if (this.$store?.state) {
+						console.log('timer======>this.$store?.state', timer)
+						this.initData(timer)
+						clearInterval(timer)
+					}
+				}, 100)
 			}
 
 		},
-		onLoad() {
-			//启用了fast模式如果直接执行会报错，找不到store，只能这样弄个定时器一直跑咯
-			let timer = setInterval(() => {
-				if (this.$store?.state) {
-					console.log('timer', timer)
-					this.initData(timer)
-					// clearInterval(timer)
-				}
-			}, 100)
+		beforeMount() {
+			this.timerLoop()
 		}
 	}
 </script>
