@@ -9,7 +9,7 @@
 
 ## 截图
 
-<img src="http://tva1.sinaimg.cn/large/008d89Swgy1h2239gjtyzg30g00zkqvd.gif" width="50%"/><img src="http://tva1.sinaimg.cn/large/008d89Swgy1h2239bf78rj30o01hc779.jpg" width="50%"/>
+<img src="./readme_static/1.gif" width="50%"/><img src="http://tva1.sinaimg.cn/large/008d89Swgy1h2239bf78rj30o01hc779.jpg" width="50%"/>
 
 ## 使用
 
