@@ -7,11 +7,19 @@
 
 
 
+## 截图
+
+<img src="http://tva1.sinaimg.cn/large/008d89Swgy1h2239gjtyzg30g00zkqvd.gif" width="50%"/><img src="http://tva1.sinaimg.cn/large/008d89Swgy1h2239bf78rj30o01hc779.jpg" width="50%"/>
+
 ## 使用
+
+### 下载
+
++ [最新版下载地址](https://github.com/james-curtis/chaoxing-sign-app/releases)
 
 ### 登录
 
-- 请使用手机号+密码登录
+- 请使用 **手机号+密码登录** (和[i.chaoxing.com](http://i.chaoxing.com)的账号密码一致)
 
 ### 课程
 
@@ -45,7 +53,7 @@
 ## 开发
 
 1. #### 插件
-   + 使用HBuilderX导入[【WrapUpdate】APP版本更新、支持wgt热更新、测试版本、跳转appStore等所有方式， - DCloud 插件市场](https://ext.dcloud.net.cn/plugin?id=5141)和[uView2.0重磅发布，利剑出鞘，一统江湖 - DCloud 插件市场](https://ext.dcloud.net.cn/plugin?id=1593)
+   + ~~使用HBuilderX导入[【WrapUpdate】APP版本更新、支持wgt热更新、测试版本、跳转appStore等所有方式， - DCloud 插件市场](https://ext.dcloud.net.cn/plugin?id=5141)和[uView2.0重磅发布，利剑出鞘，一统江湖 - DCloud 插件市场](https://ext.dcloud.net.cn/plugin?id=1593)~~
 
 2. #### uni-app应用标识(AppID)需要重新获取一下
 
