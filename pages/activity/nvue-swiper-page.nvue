@@ -6,7 +6,12 @@
 				<text class="loading-text">{{refreshText}}</text>
 			</view>
 		</refresh>
-		<cell v-for="(item, index) in activityList" :key="item.id">
+		<cell v-if="activityList.length===0" >
+			<view class="list-item" :class="isFirst(0)">
+				暂无签到
+			</view>
+		</cell>
+		<cell v-else v-for="(item, index) in activityList" :key="item.id">
 			<view class="list-item" :class="isFirst(index)">
 				<view class="list-item-header" @click="listItemHeaderOnClickEvent(item)">
 					<view class="item-img">

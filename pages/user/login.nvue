@@ -1,11 +1,18 @@
 <template>
 	<view>
 		<u--form :model="formData" :rules="rules" class="u--form" ref="form1">
-			<u-form-item label="账号" prop="userInfo.account" borderBottom>
-				<u--input v-model="formData.userInfo.account" clearable></u--input>
+			<u-form-item labelWidth="70px" label="账号" prop="userInfo.account" borderBottom>
+				<u--input placeholder="手机号/超星号" v-model="formData.userInfo.account" clearable></u--input>
 			</u-form-item>
-			<u-form-item label="密码" prop="userInfo.pwd" borderBottom>
+			<u-form-item labelWidth="70px" label="密码" prop="userInfo.pwd" borderBottom>
 				<u--input clearable v-model="formData.userInfo.pwd" type="password"></u--input>
+			</u-form-item>
+			<u-form-item labelWidth="70px" label="验证码" prop="code">
+				<u--input clearable v-model="formData.code">
+					<template slot="prefix">
+						<u--image :showLoading="true" :src="codeBase64" width="123px" height="40px" @click="getLoginCodeBase64"></u--image>
+					</template>
+				</u--input>
 			</u-form-item>
 			<u-button type="primary" text="提交" customStyle="margin-top: 50px" @click="submit"></u-button>
 		</u--form>
@@ -36,6 +43,13 @@
 						transform(v) {
 							return String(v).trim()
 						},
+					},
+					'code': {
+						required: true,
+						message: '验证码不能为空',
+						transform(v) {
+							return String(v).trim()
+						},
 					}
 				},
 				formData: {
@@ -43,14 +57,16 @@
 						account: '',
 						pwd: '',
 					},
+					code: '',
 				},
+				codeBase64: '',
 			};
 		},
 		methods: {
 			async submit() {
 				try {
 					await this.$refs.form1.validate()
-					this.login(this.formData.userInfo)
+					this.login(this.formData)
 				} catch (e) {}
 			},
 			async login(res) {
@@ -61,7 +77,7 @@
 						type: 'error',
 						duration: 1000,
 					})
-					return
+					return;
 				}
 				let user = await this.$store.dispatch('user/getUserInfo', true)
 
@@ -99,8 +115,14 @@
 						}, 500);
 					}
 				})
-			}
+			},
+			async getLoginCodeBase64() {
+				this.codeBase64 = await userBiz.getLoginCode();
+			},
 		},
+		created() {
+			this.getLoginCodeBase64()
+		}
 	}
 </script>
 

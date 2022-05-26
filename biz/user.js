@@ -5,15 +5,18 @@ import UserEntity from '@/entity/User.js'
  * 登录
  * @param {String} account 
  * @param {String} pwd
+ * @param {String} validateCode
  */
 async function login({
 	account,
-	pwd
+	pwd,
+	validateCode
 }, raw = false) {
 	await userApi.loginPage()
 	let r = await userApi.login({
 		account,
-		pwd
+		pwd,
+		validateCode
 	})
 	if (raw) return r
 	return r.data
@@ -52,7 +55,7 @@ async function getUserInfo() {
 		console.log('sexReg.exec(html)', sexReg.exec(html))
 		if (sexReg.test(html))
 			sex = sexReg.exec(html)[1]
-		sex.replace('female','女').replace('male','男')
+		sex.replace('female', '女').replace('male', '男')
 
 	} catch (e) {
 		console.warn(e)
@@ -67,7 +70,15 @@ async function getUserInfo() {
 	})
 }
 
+async function getLoginCode() {
+	const res = await userApi.getLoginCode()
+	const base64 = "data:image/png;base64," + uni.arrayBufferToBase64(res.data)
+	console.log("arrayBufferToBase64", base64)
+	return base64
+}
+
 export default {
 	login,
-	getUserInfo
+	getUserInfo,
+	getLoginCode
 }

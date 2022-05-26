@@ -12,21 +12,15 @@
 					<view class="avatar">
 						<u-avatar :src="avatar" class="avatarImg" size="150"></u-avatar>
 					</view>
-					<view>
-						<u--text :text="`姓名：${name}`" size="20"></u--text>
-					</view>
-					<view>
-						<u--text :text="`性别：${sex}`" size="20"></u--text>
-					</view>
-					<view>
-						<u--text :text="`学号：${numberCard}`" size="20"></u--text>
-					</view>
-					<view>
-						<u--text :text="`手机号：${phone}`" size="20"></u--text>
-					</view>
-					<view>
-						<u--text :text="`学校：${school}`" size="20"></u--text>
-					</view>
+					<u-cell-group>
+						<u-cell title="姓名" :label="name" :clickable="true" size='large'></u-cell>
+						<u-cell title="性别" :label="sex" :clickable="true" size='large'></u-cell>
+						<!-- <u-cell title="学号" :label="numberCard" :clickable="true" size='large'></u-cell> -->
+						<u-cell title="手机号" :label="phone" :clickable="true" size='large'></u-cell>
+						<u-cell title="学校" :label="school" :clickable="true" size='large'></u-cell>
+						<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
+						<u-cell title="GitHub仓库" size='large' :isLink="true" @click="gotoGithub"></u-cell>
+					</u-cell-group>
 				</view>
 				<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
 			</view>
@@ -72,6 +66,25 @@
 			})
 		},
 		methods: {
+			shareApp() {
+				plus.nativeUI.alert("一款好的APP才不会内置这样的功能嗷！谢谢您的使用！", () => {}, "温馨提示")
+			},
+			gotoGithub() {
+				let url = 'https://github.com/james-curtis/chaoxing-sign-app'
+				plus.nativeUI.confirm(url, function(e) {
+					console.log("plus.nativeUI.confirm", e)
+					if (e.index == 0) {
+						plus.runtime.openURL(url)
+					} else if (e.index == 1) {
+						uni.setClipboardData({
+							data: url
+						})
+					}
+				}, {
+					"title": "GitHub仓库地址",
+					"buttons": ["打开", "复制"],
+				});
+			},
 			toLogin() {
 				uni.navigateTo({
 					url: 'login'
@@ -117,6 +130,7 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
+
 		.loading-text {
 			font-size: 14px;
 		}
@@ -125,6 +139,7 @@
 	.list {
 		flex: 1;
 	}
+
 	.container {
 		padding: 20px;
 

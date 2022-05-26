@@ -67,11 +67,16 @@ const actions = {
 	/**
 	 * 登录
 	 * @param {Object} context
-	 * @param {Object} userInfo
+	 * @param {Object} userInfoObj
 	 */
-	async login(context, userInfo) {
-		console.log(userInfo)
-		let r = await UserBiz.login(userInfo, true)
+	async login(context, userInfoObj) {
+		console.log(userInfoObj)
+		let userInfo = userInfoObj.userInfo;
+		let r = await UserBiz.login({
+			account: userInfoObj.userInfo.account,
+			pwd: userInfoObj.userInfo.pwd,
+			validateCode: userInfoObj.code
+		}, true)
 		// console.log('什么情况', r)
 		if (r.data.status === true) {
 			context.commit('SET_ACCOUNT', userInfo.account)
