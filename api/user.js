@@ -13,23 +13,27 @@ function loginPage() {
  * 登录API
  * @param {String} account 
  * @param {String} pwd 
- * @param {String} fid 
- * @param {String} t 
- * @param {String} refer 
+ * @param {String} validateCode 
  */
 function login({
 	account,
 	pwd,
+	validateCode
 }) {
-	let passwd = btoa(pwd);
-	return http.post('http://passport2.chaoxing.com/fanyalogin', {
+	// let passwd = btoa(pwd);
+	return http.post('http://passport2.chaoxing.com/mlogin?refer=http%3A%2F%2Fi.mooc.chaoxing.com', {
 		uname: account,
-		password: passwd,
+		password: pwd,
 		t: 'true',
 		fid: '-1',
-		refer: 'http://i.chaoxing.com'
+		numcode: validateCode,
+		isCheckNumCode: 1,
+		allowJoin: 0,
+		pidName: "",
+		fidName: "",
 	}, {
 		header: {
+			'Referer': 'http://passport2.chaoxing.com/mlogin?refer=http%3A%2F%2Fi.mooc.chaoxing.com',
 			'content-type': 'application/x-www-form-urlencoded'
 		},
 	})
@@ -57,9 +61,16 @@ function getCourse() {
 	})
 }
 
+function getLoginCode() {
+	return http.get(`http://passport2.chaoxing.com/num/code?${new Date().getTime()}`, {
+		responseType: 'arraybuffer',
+	})
+}
+
 export default {
 	loginPage,
 	login,
 	accountManager,
-	getCourse
+	getCourse,
+	getLoginCode
 }
