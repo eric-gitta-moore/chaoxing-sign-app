@@ -15,7 +15,7 @@
 					<u-cell-group>
 						<u-cell title="姓名" :label="name" :clickable="true" size='large'></u-cell>
 						<u-cell title="性别" :label="sex" :clickable="true" size='large'></u-cell>
-						<!-- <u-cell title="学号" :label="numberCard" :clickable="true" size='large'></u-cell> -->
+						<u-cell title="学号" :label="numberCard" :clickable="true" size='large'></u-cell>
 						<u-cell title="手机号" :label="phone" :clickable="true" size='large'></u-cell>
 						<u-cell title="学校" :label="school" :clickable="true" size='large'></u-cell>
 						<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
@@ -59,7 +59,7 @@
 				return this.userInfo?.school
 			},
 			numberCard() {
-				return this.userInfo?.name
+				return this.userInfo?.numberCard
 			},
 			...mapGetters({
 				userInfo: 'user/userEntity'
