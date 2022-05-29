@@ -141,19 +141,13 @@
 					await this.$store.dispatch('user/getLoginParams')
 					await this.refreshCourseList()
 					await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
-					uni.preloadPage({
+					setTimeout(() => uni.preloadPage({
 						url: "/pages/activity/activity"
-					});
-					uni.preloadPage({
+					}), 0)
+					setTimeout(() => uni.preloadPage({
 						url: "/pages/user/user"
-					});
+					}), 0)
 				} catch (e) {
-					plus.nativeUI.toast('请先登录')
-					uni.navigateTo({
-						url: '/pages/user/login'
-					})
-				}
-				if (this.$store.state.user.cookies.length === 0) {
 					plus.nativeUI.toast('请先登录')
 					uni.navigateTo({
 						url: '/pages/user/login'

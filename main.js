@@ -1,4 +1,5 @@
 import App from './App'
+import 'weapp-cookie'
 
 // #ifndef VUE3
 import Vue from 'vue'

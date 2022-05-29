@@ -59,27 +59,7 @@
 			// 	current: 0,
 			// 	name: '全部',
 			// })
-			if (this.courseList) {
-				this.courseList.forEach((value, index) => {
-					this.tabList.push({
-						// 这里不能用courseId
-						// 他在里面取值的时候是按照this.list[this.innerCurrent]
-						// 其中this.innerCurrent就是这里设置的ID
-						current: Number(index + 1),
-						courseId: Number(value.courseId),
-						name: value.name,
-					})
-				})
-				// for (const courseListElement of this.courseList) {
-				// 	this.tabList.push({
-				// 		current: Number(courseListElement.courseId),
-				// 		name: courseListElement.name,
-				// 	})
-				// }
-			}
-			this.currentIndex = this.tabList[0].current
-
-			uni.$on(Constant.globalEmitEvent.onSwitchToActivityTab, this.onSwitchToActivityTab)
+			this.loadData()
 		},
 		methods: {
 			/**
@@ -110,6 +90,29 @@
 				if (params &&
 					this.tabList[index])
 					this.currentIndex = index
+			},
+			async loadData() {
+				if (this.courseList) {
+					this.courseList.forEach((value, index) => {
+						this.tabList.push({
+							// 这里不能用courseId
+							// 他在里面取值的时候是按照this.list[this.innerCurrent]
+							// 其中this.innerCurrent就是这里设置的ID
+							current: Number(index + 1),
+							courseId: Number(value.courseId),
+							name: value.name,
+						})
+					})
+					// for (const courseListElement of this.courseList) {
+					// 	this.tabList.push({
+					// 		current: Number(courseListElement.courseId),
+					// 		name: courseListElement.name,
+					// 	})
+					// }
+				}
+				this.currentIndex = this.tabList[0].current
+
+				uni.$on(Constant.globalEmitEvent.onSwitchToActivityTab, this.onSwitchToActivityTab)
 			}
 		}
 	}
