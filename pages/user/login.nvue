@@ -7,7 +7,7 @@
 			<u-form-item labelWidth="70px" label="密码" prop="userInfo.pwd" borderBottom>
 				<u--input clearable v-model="formData.userInfo.pwd" type="password"></u--input>
 			</u-form-item>
-			<!-- <u-form-item labelWidth="70px" label="验证码" prop="code">
+			<!-- <u-form-item v-if="false" labelWidth="70px" label="验证码" prop="code">
 				<u--input clearable v-model="formData.code">
 					<template slot="prefix">
 						<u--image :showLoading="true" :src="codeBase64" width="123px" height="40px"
@@ -74,7 +74,7 @@
 			},
 			async login(res) {
 				let r = await this.$store.dispatch('user/login', res)
-				if (r.status === false) {
+				if (r?.status === false) {
 					this.$refs.uToast.show({
 						message: r.msg2,
 						type: 'error',
@@ -83,6 +83,12 @@
 					return;
 				}
 				let user = await this.$store.dispatch('user/getUserInfo', true)
+				let appendAccount = {
+					...res.userInfo,
+					name: user.name
+				}
+				console.log('appendAccount', appendAccount)
+				this.$store.dispatch('userManagement/appendAccount', appendAccount)
 
 				setTimeout(() => {
 					let vm = this;

@@ -32,9 +32,8 @@ const mutations = {
 		// state.avatar = info.avatar
 		// state.phone = info.phone
 		// state.school = info.school
-		console.log(`%c info`, 'color:green', info, Object.keys(info))
+		// console.log(`%c info`, 'color:green', info, Object.keys(info))
 		for (let key of Object.keys(info)) {
-			console.log(',Object.keys(info)', key)
 			state[key] = info[key]
 		}
 	},
@@ -67,6 +66,12 @@ const actions = {
 			pwd: userInfoObj.userInfo.pwd,
 			validateCode: userInfoObj.code
 		}, true)
+		if (r.data?.status) {
+			context.commit('SET_INFO', {
+				account: userInfoObj.userInfo.account,
+				pwd: userInfoObj.userInfo.pwd,
+			})
+		}
 		return r.data
 	},
 

@@ -1,47 +1,43 @@
 <template>
-	<list class="list" :offset-accuracy="5">
-		<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown"
-			:display="refreshing ? 'show' : 'hide'">
-			<view class="refresh-view">
-				<text class="loading-text">{{refreshText}}</text>
-			</view>
-		</refresh>
-		<cell v-if="activityList.length===0" >
-			<u-empty></u-empty>
-		</cell>
-		<cell v-else v-for="(item, index) in activityList" :key="item.id">
-			<view class="list-item" :class="isFirst(index)">
-				<view class="list-item-header" @click="listItemHeaderOnClickEvent(item)">
-					<view class="item-img">
-						<u-image class="item-img-img" :src="item.logo"></u-image>
+
+	<view class="content">
+		<z-paging ref="paging" v-model="activityList" @onRefresh="freshActivity" :fixed="false"
+			show-refresher-update-time>
+			<cell v-for="(item, index) in activityList" :key="item.id">
+				<view class="list-item" :class="isFirst(index)">
+					<view class="list-item-header" @click="listItemHeaderOnClickEvent(item)">
+						<view class="item-img">
+							<u-image class="item-img-img" :src="item.logo"></u-image>
+						</view>
+						<view class="item-summary">
+							<u--text class="summary" :text="clearNewLine(item.nameOne)" :lines="1" wordWrap="anywhere">
+							</u--text>
+							<u--text class="time" color="#9c9c9c" :text="item.nameFour"></u--text>
+						</view>
 					</view>
-					<view class="item-summary">
-						<u--text class="summary" :text="clearNewLine(item.nameOne)" :lines="1" wordWrap="anywhere">
-						</u--text>
-						<u--text class="time" color="#9c9c9c" :text="item.nameFour"></u--text>
-					</view>
-				</view>
-				<u-line margin="5px"></u-line>
-				<view class="list-item-body">
-					<view class="detail-item" v-if="courseId===0">
-						<u--text :text="`科目：`+item.courseInfo.name"></u--text>
-					</view>
-					<view class="detail-item">
-						<u--text :text="`活动ID：${item.id}`"></u--text>
-					</view>
-					<view class="detail-item" v-if="item.otherId!==null">
-						<u--text :text="`otherId：`+item.otherId"></u--text>
-					</view>
-					<view class="detail-item">
-						<u--text :text="`开始时间：`+dateFormat(item.startTime)"></u--text>
-					</view>
-					<view class="detail-item" v-if="String(item.endTime).trim()!==''">
-						<u--text :text="`结束时间：`+dateFormat(item.endTime)"></u--text>
+					<u-line margin="5px"></u-line>
+					<view class="list-item-body">
+						<view class="detail-item" v-if="courseId===0">
+							<u--text :text="`科目：`+item.courseInfo.name"></u--text>
+						</view>
+						<view class="detail-item">
+							<u--text :text="`活动ID：${item.id}`"></u--text>
+						</view>
+						<view class="detail-item" v-if="item.otherId!==null">
+							<u--text :text="`otherId：`+item.otherId"></u--text>
+						</view>
+						<view class="detail-item">
+							<u--text :text="`开始时间：`+dateFormat(item.startTime)"></u--text>
+						</view>
+						<view class="detail-item" v-if="String(item.endTime).trim()!==''">
+							<u--text :text="`结束时间：`+dateFormat(item.endTime)"></u--text>
+						</view>
 					</view>
 				</view>
-			</view>
-		</cell>
-	</list>
+			</cell>
+		</z-paging>
+
+	</view>
 </template>
 
 <script>
@@ -65,11 +61,6 @@
 		},
 		data() {
 			return {
-				scrollable: true,
-				dataList: [],
-				refreshing: false,
-				refreshText: "",
-				activityList: [],
 				checkedActivity: {},
 
 				actionSheetIsShow: false,
@@ -77,9 +68,11 @@
 			}
 		},
 		computed: {
-			...mapGetters({
-				allActivities: 'course/allActivities',
-			})
+			activityList() {
+				let r = this.$store.getters['course/activitiesByCourseId'](this.courseId)
+				console.log(`this.$store.getters['course/activitiesByCourseId'](this.courseId)`, r)
+				return r
+			}
 		},
 		methods: {
 			/**
@@ -105,84 +98,18 @@
 				if (!activity?.otherId) return;
 				this.chooseSignType(activity)
 			},
-			loadData() {
-				// 首次激活时被调用
-			},
-			clear() {
-				// 释放数据时被调用，参考 swiper-list 缓存配置
-				this.dataList.length = 0;
-			},
-
-			/**
-			 * @description 下拉刷新完成事件
-			 * @param {Object} e
-			 */
-			onrefresh(e) {
-				this.refreshing = true;
-				this.refreshText = "刷新中...";
-				// setTimeout(() => {
-				// 	this.refreshing = false;
-				// 	this.refreshText = "已刷新";
-				// }, 2000)
-				this.freshActivity().then(() => {
-					this.refreshing = false;
-					this.refreshText = "已刷新";
-				})
-			},
-
-			/**
-			 * @description 下拉事件，但是没有完成整个下拉操作
-			 * @param {Object} e
-			 */
-			onpullingdown(e) {
-				if (this.refreshing) {
-					return;
-				}
-
-				this.pulling = false;
-				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
-					this.refreshText = "释放立即刷新";
-				} else {
-					this.refreshText = "下拉可以刷新";
-				}
-			},
 
 			/**
 			 * @description 刷新所有活动
 			 */
 			async freshActivity() {
-				let a = await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
-				this.updateActivityList()
-			},
-
-			/**
-			 * @description 刷新当前页面活动
-			 */
-			async updateActivityList() {
-				if (this.courseId != 0)
-					this.activityList = this.$store.getters['course/oneActivities'](this.courseId)
-				else {
-					let list = this.$store.getters['course/allActivities']
-					// debugger
-					let active = list.filter(a => (a.endTime === '' || Number(a.endTime) - new Date().getTime() > 0))
-					let unactive = list.filter(a => !(a.endTime === '' ||
-						Number(a.endTime) - new Date().getTime() > 0))
-					active.sort((a, b) => Number(b.startTime) - Number(a.startTime))
-					unactive.sort((a, b) => Number(b.startTime) - Number(a.startTime))
-
-					this.activityList = active.concat(unactive)
-				}
-				console.log(this.activityList)
+				await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
 			},
 
 			/**
 			 * @description 清空文本换行符
 			 */
 			clearNewLine: text => text.replace(/\r/g, "").replace(/\n/g, ""),
-
-			// ...mapGetters({
-			// 	oneActivities: 'course/oneActivities',
-			// })
 
 			/**
 			 * @description 确认签到的类型
@@ -214,7 +141,8 @@
 													let enc = regResult.groups.enc
 													console.log(enc)
 													this.allInOneSign(
-														Constant.signType.QRCodeSign,
+														Constant.signType
+														.QRCodeSign,
 														this.checkedActivity, {
 															enc
 														})
@@ -253,11 +181,12 @@
 								console.log('详细地址：' + res.address);
 								console.log('纬度：' + res.latitude);
 								console.log('经度：' + res.longitude);
-								this.allInOneSign(Constant.signType.locationSign, this.checkedActivity, {
-									address: res.address,
-									latitude: res.latitude,
-									longitude: res.longitude
-								})
+								this.allInOneSign(Constant.signType.locationSign, this
+									.checkedActivity, {
+										address: res.address,
+										latitude: res.latitude,
+										longitude: res.longitude
+									})
 							}
 						});
 						break
@@ -368,29 +297,21 @@
 
 
 		},
-		mounted() {
-			this.updateActivityList()
+		created() {
+			// this.freshActivity()
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.refresh-view {
-		width: 750rpx;
-		height: 80px;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-
-		.loading-text {
-			font-size: 14px;
-		}
-	}
-
-	.list {
+	.content {
 		flex: 1;
-		background-color: #ebebeb;
+		height: 100%;
 	}
+
+	// page {
+	// 	background-color: #ebebeb;
+	// }
 
 	.first-item {
 		margin-top: 12px;
