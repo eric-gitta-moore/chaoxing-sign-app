@@ -1,31 +1,33 @@
 <template>
-	<list class="list" :offset-accuracy="5">
-		<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown"
-			:display="refreshing ? 'show' : 'hide'">
-			<div class="refresh-view">
-				<text class="loading-text">{{refreshText}}</text>
-			</div>
-		</refresh>
-		<cell>
-			<view class="container">
-				<view class="main">
-					<view class="avatar">
-						<u-avatar :src="avatar" class="avatarImg" size="150"></u-avatar>
+
+	<view class="content">
+		<z-paging ref="paging" @query="onrefresh">
+			<cell>
+				<view class="container">
+					<view class="main">
+						<view class="avatar">
+							<u-avatar :src="getUserInfoField(`avatar`)" class="avatarImg" size="150"
+								@click="showMyAvatar"></u-avatar>
+						</view>
+						<u-cell-group>
+							<u-cell title="姓名" :label="getUserInfoField(`name`)" :clickable="true" size='large'>
+							</u-cell>
+							<u-cell title="性别" :label="getUserInfoField(`sex`)" :clickable="true" size='large'></u-cell>
+							<u-cell title="学号" :label="getUserInfoField(`numberCard`)" :clickable="true" size='large'>
+							</u-cell>
+							<u-cell title="手机号" :label="getUserInfoField(`phone`)" :clickable="true" size='large'>
+							</u-cell>
+							<u-cell title="学校" :label="getUserInfoField(`school`)" :clickable="true" size='large'>
+							</u-cell>
+							<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
+							<u-cell title="GitHub仓库" size='large' :isLink="true" @click="gotoGithub"></u-cell>
+						</u-cell-group>
 					</view>
-					<u-cell-group>
-						<u-cell title="姓名" :label="name" :clickable="true" size='large'></u-cell>
-						<u-cell title="性别" :label="sex" :clickable="true" size='large'></u-cell>
-						<u-cell title="学号" :label="numberCard" :clickable="true" size='large'></u-cell>
-						<u-cell title="手机号" :label="phone" :clickable="true" size='large'></u-cell>
-						<u-cell title="学校" :label="school" :clickable="true" size='large'></u-cell>
-						<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
-						<u-cell title="GitHub仓库" size='large' :isLink="true" @click="gotoGithub"></u-cell>
-					</u-cell-group>
+					<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
 				</view>
-				<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
-			</view>
-		</cell>
-	</list>
+			</cell>
+		</z-paging>
+	</view>
 </template>
 
 <script>
@@ -37,35 +39,22 @@
 
 	export default {
 		data() {
-			return {
-				refreshing: false,
-				refreshText: "",
-			};
+			return {};
 		},
 		computed: {
-			avatar() {
-				return this.userInfo?.avatar
-			},
-			name() {
-				return this.userInfo?.name
-			},
-			sex() {
-				return this.userInfo?.sex
-			},
-			phone() {
-				return this.userInfo?.phone
-			},
-			school() {
-				return this.userInfo?.school
-			},
-			numberCard() {
-				return this.userInfo?.numberCard
-			},
 			...mapGetters({
 				userInfo: 'user/userEntity'
 			})
 		},
 		methods: {
+			getUserInfoField(name) {
+				try {
+					return this.userInfo[name]
+				} catch (e) {
+
+				}
+				return ''
+			},
 			shareApp() {
 				plus.nativeUI.alert("一款好的APP才不会内置这样的功能嗷！谢谢您的使用！", () => {}, "温馨提示")
 			},
@@ -94,28 +83,15 @@
 				await this.$store.dispatch('user/getUserInfo')
 			},
 			onrefresh(e) {
-				if (this.refreshing) {
-					return;
-				}
-				this.refreshing = true;
-				this.refreshText = "刷新中...";
 				this.$store.dispatch('user/getUserInfo', true).then(() => {
-					this.refreshing = false;
-					this.refreshText = "已刷新";
 					console.log(this.userInfo)
 				})
 			},
-			onpullingdown(e) {
-				if (this.refreshing) {
-					return;
-				}
-				this.pulling = false;
-				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
-					this.refreshText = "释放立即刷新";
-				} else {
-					this.refreshText = "下拉可以刷新";
-				}
-			},
+			showMyAvatar() {
+				uni.previewImage({
+					urls: [this.getUserInfoField('avatar')]
+				})
+			}
 		},
 		onLoad() {
 			this.initUserInfo()
