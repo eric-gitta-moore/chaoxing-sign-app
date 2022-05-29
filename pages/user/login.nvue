@@ -10,11 +10,14 @@
 			<u-form-item labelWidth="70px" label="验证码" prop="code">
 				<u--input clearable v-model="formData.code">
 					<template slot="prefix">
-						<u--image :showLoading="true" :src="codeBase64" width="123px" height="40px" @click="getLoginCodeBase64"></u--image>
+						<u--image :showLoading="true" :src="codeBase64" width="123px" height="40px"
+							@click="getLoginCodeBase64"></u--image>
 					</template>
 				</u--input>
 			</u-form-item>
-			<u-button type="primary" text="提交" customStyle="margin-top: 50px" @click="submit"></u-button>
+			<u-button type="primary" text="登录" customStyle="margin-top: 50px" @click="submit"></u-button>
+			<u-button type="error" :plain="true" text="忘记密码" customStyle="margin-top: 10px" @click="forgotPasswd">
+			</u-button>
 		</u--form>
 		<u-toast ref="uToast"></u-toast>
 	</view>
@@ -119,6 +122,15 @@
 			async getLoginCodeBase64() {
 				this.codeBase64 = await userBiz.getLoginCode();
 			},
+			forgotPasswd() {
+				plus.nativeUI.confirm("这里的账号密码和学习通网页版一样\n如果忘记密码可以去学习通网页版找回", e => {
+					if (e.index === 0) {
+						plus.runtime.openURL("http://i.chaoxing.com/")
+					}
+				}, {
+					"buttons": ["打开学习通网页版", "取消"],
+				})
+			}
 		},
 		created() {
 			this.getLoginCodeBase64()

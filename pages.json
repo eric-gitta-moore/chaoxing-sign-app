@@ -39,7 +39,8 @@
 				"pagePath": "pages/user/user",
 				"text": "我的"
 			}
-		]
+		],
+		"fontSize": "14px"
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

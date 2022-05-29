@@ -7,9 +7,7 @@
 			</view>
 		</refresh>
 		<cell v-if="activityList.length===0" >
-			<view class="list-item" :class="isFirst(0)">
-				暂无签到
-			</view>
+			<u-empty></u-empty>
 		</cell>
 		<cell v-else v-for="(item, index) in activityList" :key="item.id">
 			<view class="list-item" :class="isFirst(index)">

@@ -12,7 +12,7 @@ async function login({
 	pwd,
 	validateCode
 }, raw = false) {
-	await userApi.loginPage()
+	// await userApi.loginPage()
 	let r = await userApi.login({
 		account,
 		pwd,
@@ -73,7 +73,6 @@ async function getUserInfo() {
 async function getLoginCode() {
 	const res = await userApi.getLoginCode()
 	const base64 = "data:image/png;base64," + uni.arrayBufferToBase64(res.data)
-	console.log("arrayBufferToBase64", base64)
 	return base64
 }
 
