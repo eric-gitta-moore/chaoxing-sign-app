@@ -4,14 +4,15 @@ class User {
 		sex,
 		avatar,
 		phone,
-		school
+		school,
+		numberCard
 	}) {
 		this.name = name
 		this.sex = sex
 		this.avatar = avatar
 		this.phone = phone
 		this.school = school
-
+		this.numberCard = numberCard
 	}
 }
 

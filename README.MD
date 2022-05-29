@@ -55,9 +55,13 @@
 1. #### 插件
    + ~~使用HBuilderX导入[【WrapUpdate】APP版本更新、支持wgt热更新、测试版本、跳转appStore等所有方式， - DCloud 插件市场](https://ext.dcloud.net.cn/plugin?id=5141)和[uView2.0重磅发布，利剑出鞘，一统江湖 - DCloud 插件市场](https://ext.dcloud.net.cn/plugin?id=1593)~~
 
-2. #### uni-app应用标识(AppID)需要重新获取一下
+2. #### NPM包
 
-3. #### 地图使用的是高德地图，需要配置自己的appkey，配置教程[地图插件配置 - DCloud问答](https://ask.dcloud.net.cn/article/29)
+   - crypto-js安装`npm i crypto-js` 
+
+3. #### uni-app应用标识(AppID)需要重新获取一下
+
+4. #### 地图使用的是高德地图，需要配置自己的appkey，配置教程[地图插件配置 - DCloud问答](https://ask.dcloud.net.cn/article/29)
 
 
 

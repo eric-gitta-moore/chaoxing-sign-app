@@ -30,11 +30,14 @@ async function getUserInfo() {
 		sex = '',
 		phone = '',
 		avatar = '',
+		numberCard = '',
 		school = '';
 	let html = await userApi.accountManager()
 	html = html.data
 	try {
-
+		/**
+		 * PC UA正则匹配
+		 */
 		let nameReg = /id="messageName">(.*?)<\/p>/mi
 		if (nameReg.test(html))
 			name = nameReg.exec(html)[1]
@@ -42,6 +45,10 @@ async function getUserInfo() {
 		let phoneReg = /id="messagePhone">((\+?0?86\-?)?1[3-9]\d{9})<\/span>/mi
 		if (phoneReg.test(html))
 			phone = phoneReg.exec(html)[1]
+
+		let numberCardReg = /xuehao.*?:(\d+)<\/p>/mi
+		if (numberCardReg.test(html))
+			numberCard = numberCardReg.exec(html)[1]
 
 		let avatarReg = /"(http:\/\/photo.chaoxing.com\/p\/.*?)"/mi
 		if (avatarReg.test(html))
@@ -52,22 +59,24 @@ async function getUserInfo() {
 			school = schoolReg.exec(html)[1]
 
 		let sexReg = /value="1"><\/i>(男|女|male|female)\s*<\/span>/mi
-		console.log('sexReg.exec(html)', sexReg.exec(html))
+		// console.log('sexReg.exec(html)', sexReg.exec(html))
 		if (sexReg.test(html))
 			sex = sexReg.exec(html)[1]
-		sex.replace('female', '女').replace('male', '男')
 
 	} catch (e) {
 		console.warn(e)
 	}
 
-	return new UserEntity({
+	let entity = new UserEntity({
 		name: name.trim(),
-		sex: sex.trim(),
+		sex: sex.trim().replace('female', '女').replace('male', '男'),
 		phone: phone.trim(),
+		numberCard: numberCard.trim(),
 		avatar: avatar.trim(),
 		school: school.trim()
 	})
+	console.log("UserEntity", entity)
+	return entity;
 }
 
 async function getLoginCode() {

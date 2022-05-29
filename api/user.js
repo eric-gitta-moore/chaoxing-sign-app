@@ -1,4 +1,7 @@
 import http from './http.js'
+import {
+	encryptByDES
+} from '@/util/encrypteHelper.js'
 
 /**
  * 
@@ -18,20 +21,32 @@ function loginPage() {
 function login({
 	account,
 	pwd,
-	validateCode
+	validateCode = ''
 }) {
 	// let passwd = btoa(pwd);
-	return http.post('http://passport2.chaoxing.com/mlogin?refer=http%3A%2F%2Fi.mooc.chaoxing.com', {
-		uname: account,
-		password: pwd,
-		t: 'true',
-		fid: '-1',
-		numcode: validateCode,
-		isCheckNumCode: 1,
-		allowJoin: 0,
-		pidName: "",
-		fidName: "",
-	}, {
+	var transferKey = "u2oh6Vu^HWe40fj";
+	let v1 = `http://passport2.chaoxing.com/mlogin?refer=http%3A%2F%2Fi.mooc.chaoxing.com`,
+		v1Data = {
+			uname: account,
+			password: pwd,
+			t: 'true',
+			fid: '-1',
+			numcode: validateCode,
+			isCheckNumCode: 1,
+			allowJoin: 0,
+			pidName: "",
+			fidName: "",
+		},
+		v2 = `http://passport2.chaoxing.com/fanyalogin`,
+		v2Data = {
+			fid: -1,
+			uname: account,
+			password: encryptByDES(pwd, transferKey),
+			refer: `http%3A%2F%2Fi.chaoxing.com`,
+			t: `true`
+		}
+	// console.warn(`encryptByDES(pwd, transferKey)`,encryptByDES(pwd, transferKey))
+	return http.post(v2, v2Data, {
 		header: {
 			'Referer': 'http://passport2.chaoxing.com/mlogin?refer=http%3A%2F%2Fi.mooc.chaoxing.com',
 			'content-type': 'application/x-www-form-urlencoded'
@@ -43,7 +58,11 @@ function login({
  * 账号信息页面
  */
 function accountManager() {
-	return http.get('http://passport2.chaoxing.com/mooc/accountManage')
+	return http.get('http://passport2.chaoxing.com/mooc/accountManage', {
+		header: {
+			'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36'
+		}
+	})
 }
 
 /**

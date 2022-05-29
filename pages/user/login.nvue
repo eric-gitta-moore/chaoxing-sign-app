@@ -7,14 +7,14 @@
 			<u-form-item labelWidth="70px" label="密码" prop="userInfo.pwd" borderBottom>
 				<u--input clearable v-model="formData.userInfo.pwd" type="password"></u--input>
 			</u-form-item>
-			<u-form-item labelWidth="70px" label="验证码" prop="code">
+			<!-- <u-form-item labelWidth="70px" label="验证码" prop="code">
 				<u--input clearable v-model="formData.code">
 					<template slot="prefix">
 						<u--image :showLoading="true" :src="codeBase64" width="123px" height="40px"
 							@click="getLoginCodeBase64"></u--image>
 					</template>
 				</u--input>
-			</u-form-item>
+			</u-form-item> -->
 			<u-button type="primary" text="登录" customStyle="margin-top: 50px" @click="submit"></u-button>
 			<u-button type="error" :plain="true" text="忘记密码" customStyle="margin-top: 10px" @click="forgotPasswd">
 			</u-button>

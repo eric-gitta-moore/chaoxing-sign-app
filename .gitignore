@@ -1,5 +1,6 @@
 .DS_Store
 # node_modules
+node_modules/crypto-js
 /dist
 unpackage/cache
 unpackage/dist
