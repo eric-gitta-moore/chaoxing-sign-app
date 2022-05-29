@@ -1,7 +1,9 @@
 <template>
 
 	<view class="content">
-		<z-paging ref="paging" @query="onrefresh">
+		<z-paging ref="paging" @onRefresh="onrefresh">
+			<custom-refresher slot="refresher" slot-scope="{refresherStatus}" :status="refresherStatus">
+			</custom-refresher>
 			<cell>
 				<view class="container">
 					<view class="main">
