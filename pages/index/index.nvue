@@ -1,8 +1,8 @@
 <template>
 	<view class="container">
 
-		<z-paging ref="paging" v-model="courseList" @onRefresh="onrefresh" show-refresher-update-time>
-			<cell v-for="(v,i) in courseList" :key="v.courseId">
+		<z-paging ref="paging" v-model="pagingCourseList" @query="refreshCourseList" show-refresher-update-time>
+			<cell v-for="(v,i) in pagingCourseList" :key="v.courseId">
 				<view class="card" elevation='2px'>
 					<view class="card__title" @click="onCardClick(v.courseId,i)">
 						<image mode="aspectFill" class="card__title__img" :src="v.img"></image>
@@ -12,20 +12,20 @@
 						</view>
 					</view>
 					<view class="card__main">
-						<view>
-							<u--text class="item-title" :bold='true' text='课程ID：'></u--text>
+						<view class="card__main__view">
+							<u--text :bold='true' text='课程ID：'></u--text>
 							<u--text color='#646464' class="content" :text='v.courseId'></u--text>
 						</view>
-						<view>
-							<u--text class="item-title" :bold='true' text='班级ID：'></u--text>
+						<view class="card__main__view">
+							<u--text :bold='true' text='班级ID：'></u--text>
 							<u--text color='#646464' class="content" :text='v.classId'></u--text>
 						</view>
-						<view>
-							<u--text class="item-title" :bold='true' text='班级名：'></u--text>
+						<view class="card__main__view">
+							<u--text :bold='true' text='班级名：'></u--text>
 							<u--text color='#646464' class="content" :text='v.className'></u--text>
 						</view>
-						<view v-if="v.summary">
-							<u--text class="item-title" :bold='true' text='课程介绍：'></u--text>
+						<view class="card__main__view" v-if="v.summary">
+							<u--text :bold='true' text='课程介绍：'></u--text>
 							<u--text lines="5" wordWrap='break-word' color='#646464' :text='v.summary'></u--text>
 						</view>
 					</view>
@@ -46,10 +46,8 @@
 	export default {
 		data() {
 			return {
-				refreshText: "",
-				refreshing: false,
 				appId: '626f7bfb2a9fda0001d92d17',
-				timer: null,
+				pagingCourseList: []
 			}
 		},
 		computed: {
@@ -78,9 +76,14 @@
 			/**
 			 * @description 刷新课程列表
 			 */
-			async refreshCourseList(force = false) {
+			async refreshCourseList(pageNo, pageSize, force = true) {
+				if (pageNo !== 1) {
+					this.$refs.paging.complete()
+					return
+				}
 				await this.$store.dispatch('course/getCourseList', force)
 				// console.log('refreshCourseList', this.courseList)
+				this.$refs.paging.complete(this.courseList)
 			},
 			/**
 			 * @description 检查更新确认确实有更新
@@ -104,7 +107,7 @@
 
 		},
 		onLoad() {
-			this.refreshCourseList(true)
+			// this.refreshCourseList(true)
 		}
 	}
 </script>
@@ -137,18 +140,13 @@
 			}
 
 		}
-		
+
 		&__main {
-			.item-title {
-				font-weight: 700;
+			margin-top: 10px;
+			&__view{
+				margin-top: 5px;
 			}
-		
-			.content {
-				color: #646464;
-			}
-		
+
 		}
 	}
-
-
 </style>

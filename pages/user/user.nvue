@@ -1,26 +1,6 @@
 <template>
 
 	<view class="content">
-		<z-paging ref="paging" @onRefresh="onrefresh" show-refresher-update-time>
-			<cell>
-				<view class="container">
-					<view class="main">
-						<view class="avatar">
-							<u-avatar :src="getUserInfoField(`avatar`)" class="avatarImg" size="150"
-								@click="showMyAvatar"></u-avatar>
-						</view>
-						<u-cell-group>
-							<u-cell v-for="item in infoList" :title="item.title" :label="getUserInfoField(item.field)"
-								:clickable="true" size='large' @click="toClipboard(item)">
-							</u-cell>
-							<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
-							<u-cell title="GitHub仓库" size='large' :isLink="true" @click="gotoGithub"></u-cell>
-						</u-cell-group>
-					</view>
-					<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
-				</view>
-			</cell>
-		</z-paging>
 		<u-popup :show="isShowMultiUserPanel" mode='right' @open="onOpenMultiUserPanel" @close="onCloseMultiUserPanel">
 			<view :style="{width:'480rpx'}">
 
@@ -43,6 +23,26 @@
 
 			</view>
 		</u-popup>
+		<z-paging ref="paging" @onRefresh="onrefresh" show-refresher-update-time>
+			<cell>
+				<view class="container">
+					<view class="main">
+						<view class="avatar">
+							<u-avatar :src="getUserInfoField(`avatar`)" class="avatarImg" size="150"
+								@click="showMyAvatar"></u-avatar>
+						</view>
+						<u-cell-group>
+							<u-cell v-for="item in infoList" :title="item.title" :label="getUserInfoField(item.field)"
+								:clickable="true" size='large' @click="toClipboard(item)">
+							</u-cell>
+							<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
+							<u-cell title="GitHub仓库" size='large' :isLink="true" @click="gotoGithub"></u-cell>
+						</u-cell-group>
+					</view>
+					<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
+				</view>
+			</cell>
+		</z-paging>
 	</view>
 </template>
 
@@ -139,7 +139,7 @@
 				this.$store.dispatch('userManagement/__initOnce')
 
 			},
-			onrefresh(e) {
+			onrefresh() {
 				this.$store.dispatch('user/getUserInfo', true).then(() => {
 					console.log(this.userInfo)
 				})
@@ -192,6 +192,12 @@
 					})
 				} else if (e.index === 1) {
 					// 删除账号
+					this.$store.dispatch('userManagement/deleteAccounts', [this.multiUserList[index]]).then(r=>{
+						uni.showToast({
+							title:'删除成功',
+							icon:'success',
+						})
+					})
 				}
 
 			}
