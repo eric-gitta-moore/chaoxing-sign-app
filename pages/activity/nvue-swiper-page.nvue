@@ -1,9 +1,8 @@
 <template>
 
 	<view class="content">
-		<z-paging ref="paging" v-model="activityList" @onRefresh="freshActivity" :fixed="false"
-			show-refresher-update-time>
-			<cell v-for="(item, index) in activityList" :key="item.id">
+		<z-paging ref="paging" v-model="pagingActivityList" @query="freshActivity" :fixed="false" show-refresher-update-time>
+			<cell v-for="(item, index) in pagingActivityList" :key="item.id">
 				<view class="list-item" :class="isFirst(index)">
 					<view class="list-item-header" @click="listItemHeaderOnClickEvent(item)">
 						<view class="item-img">
@@ -61,6 +60,7 @@
 		},
 		data() {
 			return {
+				pagingActivityList: [],
 				checkedActivity: {},
 
 				actionSheetIsShow: false,
@@ -73,6 +73,11 @@
 				console.log(`this.$store.getters['course/activitiesByCourseId'](this.courseId)`, r)
 				return r
 			}
+		},
+		watch: {
+			// activityList(val) {
+			// 	this.pagingActivityList = val
+			// }
 		},
 		methods: {
 			/**
@@ -102,8 +107,13 @@
 			/**
 			 * @description 刷新所有活动
 			 */
-			async freshActivity() {
+			async freshActivity(pageNo, pageSize) {
+				if(pageNo!==1){
+					this.$refs.paging.complete()
+					return
+				}
 				await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
+				this.$refs.paging.complete(this.activityList)
 			},
 
 			/**
