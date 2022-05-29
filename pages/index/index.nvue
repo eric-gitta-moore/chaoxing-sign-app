@@ -1,43 +1,37 @@
 <template>
 	<view class="container">
-		<list class="list">
-			<refresh @pullingdown='onpullingdown' @refresh="onrefresh" :display=" refreshing ? 'show' : 'hide' "
-				class="refresh">
-				<div class="refresh-view">
-					<text class="loading-text">{{refreshText}}</text>
-				</div>
-			</refresh>
+
+		<z-paging ref="paging" v-model="courseList" @onRefresh="onrefresh" show-refresher-update-time>
 			<cell v-for="(v,i) in courseList" :key="v.courseId">
-				<view class="card">
-					<view class="title" @click="onCardClick(v.courseId,i)">
-						<image mode="aspectFill" class="img" :src="v.img"></image>
-						<view class="sum">
-							<text>{{v.name}}</text>
-							<text class="teacher-text">{{v.teacher}}</text>
+				<view class="card" elevation='2px'>
+					<view class="card__title" @click="onCardClick(v.courseId,i)">
+						<image mode="aspectFill" class="card__title__img" :src="v.img"></image>
+						<view class="card__title__sum">
+							<u--text :bold='true' :text='v.name'></u--text>
+							<u--text color='#646464' class="card__title__sum__teacher_text" :text='v.teacher'></u--text>
 						</view>
 					</view>
-					<view class="main">
-						<view class="item">
-							<text class="item-title">课程ID：</text>
-							<text class="content" :selectable="true">{{v.courseId}}</text>
+					<view class="card__main">
+						<view>
+							<u--text class="item-title" :bold='true' text='课程ID：'></u--text>
+							<u--text color='#646464' class="content" :text='v.courseId'></u--text>
 						</view>
-						<view class="item">
-							<text class="item-title">班级ID：</text>
-							<text class="content" :selectable="true">{{v.classId}}</text>
+						<view>
+							<u--text class="item-title" :bold='true' text='班级ID：'></u--text>
+							<u--text color='#646464' class="content" :text='v.classId'></u--text>
 						</view>
-						<view class="introduce">
-							<text class="item-title">班级名：</text>
-							<text class="content" :selectable="true">{{v.className}}</text>
+						<view>
+							<u--text class="item-title" :bold='true' text='班级名：'></u--text>
+							<u--text color='#646464' class="content" :text='v.className'></u--text>
 						</view>
-						<view class="introduce" v-if="v.summary">
-							<text class="item-title">课程介绍：</text>
-							<!-- // TODO: 这里如果设置flex:row之后，下面的text无法换行 -->
-							<rich-text class="content" :nodes="richNodes(v.summary)"></rich-text>
+						<view v-if="v.summary">
+							<u--text class="item-title" :bold='true' text='课程介绍：'></u--text>
+							<u--text lines="5" wordWrap='break-word' color='#646464' :text='v.summary'></u--text>
 						</view>
 					</view>
 				</view>
 			</cell>
-		</list>
+		</z-paging>
 		<wrap-version-update ref="wrapVersionUpdate" :id="appId" @check="onUpdateCheck">
 		</wrap-version-update>
 	</view>
@@ -59,11 +53,7 @@
 			}
 		},
 		computed: {
-			// ...mapState({
-			// 	courseList: state => state.course.courseList
-			// })
 			courseList() {
-				console.log('this.$store?.state?.course?.courseList', this.$store?.state?.course?.courseList)
 				return this.$store?.state?.course?.courseList
 			}
 		},
@@ -86,77 +76,11 @@
 				})
 			},
 			/**
-			 * @description 普通文字转富文本
-			 * @param {String} text
-			 */
-			richNodes(text) {
-				return [{
-					name: 'p',
-					children: [{
-						type: 'text',
-						text
-					}]
-				}]
-			},
-			/**
 			 * @description 刷新课程列表
 			 */
 			async refreshCourseList(force = false) {
 				await this.$store.dispatch('course/getCourseList', force)
-				console.log('refreshCourseList', this.courseList)
-			},
-			/**
-			 * @description 下拉刷新中
-			 * @param {Object} e
-			 */
-			onpullingdown(e) {
-				if (this.refreshing) return;
-				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
-					this.refreshText = '释放立即刷新'
-				} else {
-					this.refreshText = '下拉可以刷新'
-				}
-			},
-			/**
-			 * @description 下拉刷新完成
-			 * @param {Object} e
-			 */
-			onrefresh(e) {
-				if (this.refreshing) return;
-				this.refreshing = true;
-				this.refreshText = "刷新中...";
-				this.refreshCourseList(true).then(() => {
-					this.refreshing = false;
-					this.refreshText = "已刷新";
-				})
-			},
-			/**
-			 * @description 初始化所有数据
-			 */
-			async initData(timer) {
-				if (this.timer !== null) return;
-				this.timer = timer
-				try {
-					await this.$store.dispatch('user/getUserInfo')
-					await this.$store.dispatch('user/getLoginParams')
-					await this.refreshCourseList()
-					await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
-					setTimeout(() => uni.preloadPage({
-						url: "/pages/activity/activity"
-					}), 0)
-					setTimeout(() => uni.preloadPage({
-						url: "/pages/user/user"
-					}), 0)
-				} catch (e) {
-					plus.nativeUI.toast('请先登录')
-					uni.navigateTo({
-						url: '/pages/user/login'
-					})
-				}
-				console.log('打架了发送到看了副经理京东方', this)
-
-				clearInterval(timer)
-				this.timer = null
+				// console.log('refreshCourseList', this.courseList)
 			},
 			/**
 			 * @description 检查更新确认确实有更新
@@ -177,93 +101,54 @@
 					}
 				})
 			},
-			async timerLoop() {
-				this.timer = null
-				//启用了fast模式如果直接执行会报错，找不到store，只能这样弄个定时器一直跑咯
-				let timer = setInterval(() => {
-					console.log('timer', timer, this.$store?.state)
-					if (this.$store?.state) {
-						console.log('timer======>this.$store?.state', timer)
-						this.initData(timer)
-						clearInterval(timer)
-					}
-				}, 100)
-			}
 
 		},
-		beforeMount() {
-			this.timerLoop()
+		onLoad() {
+			this.refreshCourseList(true)
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
-	.container {
-		padding: 0;
-		font-size: 14px;
-		background-color: #f5f7f6;
-		flex: 1;
-	}
+	.card {
+		background-color: #fff;
+		margin: 10px 15px;
+		border-radius: 8px;
+		padding: 15px;
 
 
-	.refresh-view {
-		width: 750rpx;
-		height: 80px;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.list {
-
-		.card {
-			background-color: #fff;
-			margin: 10px 15px;
-			box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-			border-radius: 8px;
-			padding: 15px;
-		}
-
-
-		.main {
-			.item-title {
-				font-weight: 700;
-			}
-
-			.content {
-				color: #646464;
-			}
-
-			.item {
-				flex-direction: row;
-
-			}
-
-			.introduce {
-				flex-direction: column;
-			}
-		}
-
-		.title {
+		&__title {
 			flex-direction: row;
 
-			.img {
+			&__img {
 				width: 80rpx;
 				height: 80rpx;
 				border-radius: 8rpx;
 			}
 
-			.sum {
+			&__sum {
 				flex-direction: column;
 				justify-content: space-around;
 				padding-left: 20rpx;
 
-				.teacher-text {
+				&__teacher_text {
 					color: rgba(0, 0, 0, .4);
 				}
-
 			}
 
 		}
+		
+		&__main {
+			.item-title {
+				font-weight: 700;
+			}
+		
+			.content {
+				color: #646464;
+			}
+		
+		}
 	}
+
+
 </style>

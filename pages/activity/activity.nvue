@@ -1,15 +1,15 @@
 <template>
-	<view class="tabs">
-		<u-sticky class="u-sticky" bgColor="#fff">
+	<z-paging-swiper>
+		<view slot="top">
 			<u-tabs :list="tabList" @change="onChangeTab" :current="currentIndex"></u-tabs>
-		</u-sticky>
+		</view>
 
 		<swiper class="tab-view" @change="onChangeSwiper" :current="currentIndex">
 			<swiper-item class="tab-bar-view" v-for="(tab,index) in tabList" :key="tab.current" :item-id="tab.current">
-				<swiperPage class="swiper-page" :course-id="tab.courseId" :u-toast='uToast'></swiperPage>
+				<swiperPage class="swiper-page" :course-id="tab.courseId"></swiperPage>
 			</swiper-item>
 		</swiper>
-	</view>
+	</z-paging-swiper>
 </template>
 
 <script>
@@ -26,13 +26,7 @@
 		},
 		data() {
 			return {
-				tabList: [{
-					current: 0,
-					courseId: 0,
-					name: '全部',
-				}],
 				currentIndex: 0,
-
 
 				actionSheetIsShow: false,
 				actionSheetActions: [{
@@ -44,22 +38,38 @@
 						signType: Constant.signType.photoSign,
 					},
 				],
+
 			}
 		},
 		computed: {
-			courseList() {
-				console.log(',courseList,this.$store.state.course', this.$store.state.course)
-				return this.$store.state.course.courseList
+			...mapState({
+				courseList: s => s.course.courseList
+			}),
+			tabList() {
+				return [{
+						current: 0,
+						courseId: 0,
+						name: '全部',
+					},
+					...this.realTabList
+				]
+			},
+			realTabList() {
+				let val = this.courseList
+				let list = []
+				val.forEach((value, index) => {
+					list.push({
+						// 这里不能用courseId
+						// 他在里面取值的时候是按照this.list[this.innerCurrent]
+						// 其中this.innerCurrent就是这里设置的ID
+						current: Number(index + 1),
+						courseId: Number(value.courseId),
+						name: value.name,
+					})
+				})
+				// this.realTabList = list
+				return list
 			}
-		},
-		onShow() {},
-		onLoad() {
-			//这里要在mounted之前把列表填充好，不然会报错，Uncaught (in promise) TypeError: Cannot read properties of undefined (reading '0')
-			// this.tabList.push({
-			// 	current: 0,
-			// 	name: '全部',
-			// })
-			this.loadData()
 		},
 		methods: {
 			/**
@@ -91,38 +101,18 @@
 					this.tabList[index])
 					this.currentIndex = index
 			},
-			async loadData() {
-				if (this.courseList) {
-					this.courseList.forEach((value, index) => {
-						this.tabList.push({
-							// 这里不能用courseId
-							// 他在里面取值的时候是按照this.list[this.innerCurrent]
-							// 其中this.innerCurrent就是这里设置的ID
-							current: Number(index + 1),
-							courseId: Number(value.courseId),
-							name: value.name,
-						})
-					})
-					// for (const courseListElement of this.courseList) {
-					// 	this.tabList.push({
-					// 		current: Number(courseListElement.courseId),
-					// 		name: courseListElement.name,
-					// 	})
-					// }
-				}
-				this.currentIndex = this.tabList[0].current
-
+			async init() {
+				await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
 				uni.$on(Constant.globalEmitEvent.onSwitchToActivityTab, this.onSwitchToActivityTab)
 			}
-		}
+		},
+		onLoad() {
+			this.init()
+		},
 	}
 </script>
 
 <style lang="scss" scoped>
-	.tabs {
-		flex: 1;
-	}
-
 	.tab-view {
 		flex: 1;
 	}

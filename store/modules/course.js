@@ -52,6 +52,7 @@ const actions = {
 				data: courseList
 			})
 		}
+		console.warn(courseList,forceRefresh)
 		context.commit('SET_LIST', courseList)
 		return courseList
 	},
@@ -91,7 +92,18 @@ const getters = {
 			}
 			arr.push(pushOne)
 		}
-		return arr.flat()
+		let list = arr.flat()
+
+		// let list = this.$store.getters['course/allActivities']
+		// debugger
+		let active = list.filter(a => (a.endTime === '' || Number(a.endTime) - new Date()
+			.getTime() > 0))
+		let unactive = list.filter(a => !(a.endTime === '' ||
+			Number(a.endTime) - new Date().getTime() > 0))
+		active.sort((a, b) => Number(b.startTime) - Number(a.startTime))
+		unactive.sort((a, b) => Number(b.startTime) - Number(a.startTime))
+
+		return active.concat(unactive)
 	},
 	oneActivities: (state, getters) => (courseId) => {
 		for (let item of state.courseList) {
@@ -100,6 +112,12 @@ const getters = {
 			}
 		}
 		return null
+	},
+	activitiesByCourseId: (state, getters) => (id) => {
+		if (id == 0) {
+			return getters.allActivities
+		}
+		return getters.oneActivities(id)
 	}
 }
 

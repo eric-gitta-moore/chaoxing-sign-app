@@ -58,8 +58,8 @@ async function getUserInfo() {
 		if (schoolReg.test(html))
 			school = schoolReg.exec(html)[1]
 
-		let sexReg = /value="1"><\/i>(男|女|male|female)\s*<\/span>/mi
-		// console.log('sexReg.exec(html)', sexReg.exec(html))
+		let sexReg = /checked"\s*?value="\d{1}"><\/i>(男|女|male|female)\s*<\/span>/mi
+		console.log('%c sexReg.exec(html)', 'color:orange', sexReg.exec(html))
 		if (sexReg.test(html))
 			sex = sexReg.exec(html)[1]
 
@@ -85,8 +85,62 @@ async function getLoginCode() {
 	return base64
 }
 
+async function doLogin(context, {
+	account,
+	pwd
+}) {
+	let r = await context.$store.dispatch('user/login', {
+		userInfo: {
+			account,
+			pwd
+		}
+	})
+	if (r?.status === false) {
+		plus.nativeUI.toast(r.msg2, {
+			verticalAlign: 'center',
+		})
+		return false;
+	}
+	let user = await context.$store.dispatch('user/getUserInfo', true)
+	let appendAccount = {
+		account,
+		pwd,
+		name: user.name
+	}
+	console.log('appendAccount', appendAccount)
+	context.$store.dispatch('userManagement/appendAccount', appendAccount)
+
+	// setTimeout(() => {
+	// 	async function a() {
+	// 		await context.$store.dispatch('user/getUserInfo')
+	// 		await context.$store.dispatch('user/getLoginParams')
+	// 		await context.$store.dispatch('course/getCourseList', true)
+	// 		await context.$store.dispatch('course/refreshActivitiesOfAllCourse')
+			
+			
+	// 		uni.unPreloadPage({
+	// 			url: "/pages/activity/activity"
+	// 		})
+	// 		uni.unPreloadPage({
+	// 			url: "/pages/user/user"
+	// 		})
+	// 		uni.preloadPage({
+	// 			url: "/pages/activity/activity"
+	// 		});
+	// 		uni.preloadPage({
+	// 			url: "/pages/user/user"
+	// 		});
+			
+	// 	}
+	// 	a()
+	// }, 0)
+
+	return user
+}
+
 export default {
 	login,
 	getUserInfo,
-	getLoginCode
+	getLoginCode,
+	doLogin
 }

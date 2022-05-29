@@ -10,7 +10,7 @@ http.interceptors.request.use((r) => {
 		'user-agent': Constant.APPUA,
 		...r.header
 	}
-	console.info('http.interceptors.request', r)
+	// console.info('http.interceptors.request', r)
 	return r
 })
 http.interceptors.response.use((r) => {
@@ -19,10 +19,10 @@ http.interceptors.response.use((r) => {
 	//} = new URL(r.config.fullPath)
 	let domainReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/i;
 	let hostname = domainReg.exec(r.config.fullPath)[0]
-	console.log("hostname", hostname)
+	// console.log("hostname", hostname)
 
-	console.info('http.interceptors.response', r, `cookie.dir(${hostname})`, WeappCookies.dir(),
-		'uni.getStorageInfoSync', uni.getStorageInfoSync())
+	// console.info('http.interceptors.response', r, `cookie.dir(${hostname})`, WeappCookies.dir(),
+		// 'uni.getStorageInfoSync', uni.getStorageInfoSync())
 
 	if (typeof r.data !== 'string') return r;
 
@@ -30,7 +30,7 @@ http.interceptors.response.use((r) => {
 			'<title>新用户注册') !== -1) {
 		console.warn(`Promise.reject('登录过期')`, r)
 		uni.clearStorage()
-		console.log('uni.getStorageInfoSync', uni.getStorageInfoSync())
+		// console.log('uni.getStorageInfoSync', uni.getStorageInfoSync())
 		return Promise.reject('登录过期')
 	}
 	return r

@@ -14,7 +14,16 @@
 		}, {
 			"path": "pages/user/user",
 			"style": {
-				"navigationBarTitleText": "账号信息"
+				"navigationBarTitleText": "账号信息",
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"type": "menu"
+							}
+						]
+					}
+				}
 			}
 
 		}, {
