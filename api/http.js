@@ -14,15 +14,11 @@ http.interceptors.request.use((r) => {
 	return r
 })
 http.interceptors.response.use((r) => {
-	//let {
-	//	hostname
-	//} = new URL(r.config.fullPath)
 	let domainReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/i;
 	let hostname = domainReg.exec(r.config.fullPath)[0]
-	// console.log("hostname", hostname)
 
-	// console.info('http.interceptors.response', r, `cookie.dir(${hostname})`, WeappCookies.dir(),
-		// 'uni.getStorageInfoSync', uni.getStorageInfoSync())
+	console.info('http.interceptors.response', r, `cookie.dir(${hostname})`, WeappCookies.dir(),
+		'uni.getStorageInfoSync', uni.getStorageInfoSync())
 
 	if (typeof r.data !== 'string') return r;
 

@@ -1,4 +1,5 @@
 export default {
+	APPID:'626f7bfb2a9fda0001d92d17',
 	userInfo: 'userInfo',
 	courseList: 'courseList',
 	courseInfo: 'courseInfo',

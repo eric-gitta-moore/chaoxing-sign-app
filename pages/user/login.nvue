@@ -90,38 +90,45 @@
 				console.log('appendAccount', appendAccount)
 				this.$store.dispatch('userManagement/appendAccount', appendAccount)
 
-				setTimeout(() => {
-					let vm = this;
-					async function a() {
-						await vm.$store.dispatch('user/getUserInfo')
-						await vm.$store.dispatch('user/getLoginParams')
-						await vm.$store.dispatch('course/getCourseList', true)
-						await vm.$store.dispatch('course/refreshActivitiesOfAllCourse')
-						uni.unPreloadPage({
-							url: "/pages/activity/activity"
-						})
-						uni.unPreloadPage({
-							url: "/pages/user/user"
-						})
-						uni.preloadPage({
-							url: "/pages/activity/activity"
-						});
-						uni.preloadPage({
-							url: "/pages/user/user"
-						});
-					}
-					a()
-				}, 0)
+				// setTimeout(() => {
+				// 	let vm = this;
+				// 	async function a() {
+				// 		await vm.$store.dispatch('user/getUserInfo')
+				// 		await vm.$store.dispatch('user/getLoginParams')
+				// 		await vm.$store.dispatch('course/getCourseList', true)
+				// 		await vm.$store.dispatch('course/refreshActivitiesOfAllCourse')
+				// 		uni.unPreloadPage({
+				// 			url: "/pages/activity/activity"
+				// 		})
+				// 		uni.unPreloadPage({
+				// 			url: "/pages/user/user"
+				// 		})
+				// 		uni.preloadPage({
+				// 			url: "/pages/activity/activity"
+				// 		});
+				// 		uni.preloadPage({
+				// 			url: "/pages/user/user"
+				// 		});
+				// 	}
+				// 	a()
+				// }, 0)
 				this.$refs.uToast.show({
 					message: `你好，${user.name}`,
 					type: 'success',
 					duration: 1000,
 					complete() {
-						setTimeout(function() {
-							uni.navigateBack({
-
-							})
-						}, 500);
+						uni.reLaunch({
+							url: '/pages/user/user'
+						})
+						// uni.navigateBack({
+						// 	complete: () => {
+						// 		setTimeout(function() {
+						// 			uni.reLaunch({
+						// 				url: '/pages/user/user'
+						// 			})
+						// 		}, 500);
+						// 	}
+						// })
 					}
 				})
 			},

@@ -8,7 +8,7 @@
 					<uni-swipe-action-item :right-options='panelOptions' v-for="(user,index) in multiUserList"
 						:key="user.account" @click="onSwipeActionClick($event,index)" :autoClose="true">
 						<u-cell-group :border="false">
-							<u-cell :title="user.name" :label="user.account" :clickable='true'>
+							<u-cell :title="user.name" :label="user.account" :isLink='true'>
 							</u-cell>
 						</u-cell-group>
 					</uni-swipe-action-item>
@@ -32,10 +32,14 @@
 								@click="showMyAvatar"></u-avatar>
 						</view>
 						<u-cell-group>
-							<u-cell v-for="item in infoList" :title="item.title" :label="getUserInfoField(item.field)"
-								:clickable="true" size='large' @click="toClipboard(item)">
+							<u-cell v-for="(item,index) in infoList" :title="item.title" :key="index"
+								:label="getUserInfoField(item.field)" :clickable="true" size='large'
+								@click="toClipboard(item)">
 							</u-cell>
 							<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
+							<u-cell title="检查更新" size='large' :isLink="true" @click="checkUpdate"></u-cell>
+							<u-cell title="问题反馈" label="什么有bug!快告诉开发者,一起干ta" size='large' :isLink="true"
+								@click="gotoFeedback"></u-cell>
 							<u-cell title="GitHub仓库" size='large' :isLink="true" @click="gotoGithub"></u-cell>
 						</u-cell-group>
 					</view>
@@ -43,12 +47,15 @@
 				</view>
 			</cell>
 		</z-paging>
+		<wrap-version-update ref="wrapVersionUpdate" :auto='false' :id="getAppId()" @check="onUpdateCheck">
+		</wrap-version-update>
 	</view>
 </template>
 
 <script>
 	import UserBiz from '@/biz/user.js'
 	import UserEntity from '@/entity/User.js'
+	import Constant from '@/const.js'
 	import {
 		mapGetters,
 		mapState
@@ -102,6 +109,35 @@
 			})
 		},
 		methods: {
+			getAppId() {
+				return Constant.APPID
+			},
+			checkUpdate() {
+				this.$refs.wrapVersionUpdate.check()
+			},
+			/**
+			 * @description 检查更新确认确实有更新
+			 * @param {Object} res
+			 */
+			onUpdateCheck(res) {
+				if (!res.needUpdate) return;
+				this.$refs.wrapVersionUpdate.$destroy()
+				// uni.showToast({
+				// 	title:'有新版本',
+				// 	position:'bottom',
+				// })
+				uni.showModal({
+					content: `有新版本更新,请复制下载地址,手动打开手机浏览器输入地址下载\n${res.description}\n下载链接：\n${res.pkgUrl}`,
+					confirmText: "复制",
+					success: (r) => {
+						if (r.confirm) {
+							uni.setClipboardData({
+								data: res.pkgUrl,
+							})
+						}
+					}
+				})
+			},
 			getUserInfoField(name) {
 				try {
 					return this.userInfo[name]
@@ -112,6 +148,9 @@
 			},
 			shareApp() {
 				plus.nativeUI.alert("一款好的APP才不会内置这样的功能嗷！谢谢您的使用！", () => {}, "温馨提示")
+			},
+			gotoFeedback() {
+				uni.$u.route('/platforms/app-plus/feedback/feedback')
 			},
 			gotoGithub() {
 				let url = 'https://github.com/james-curtis/chaoxing-sign-app'
@@ -192,10 +231,10 @@
 					})
 				} else if (e.index === 1) {
 					// 删除账号
-					this.$store.dispatch('userManagement/deleteAccounts', [this.multiUserList[index]]).then(r=>{
+					this.$store.dispatch('userManagement/deleteAccounts', [this.multiUserList[index]]).then(r => {
 						uni.showToast({
-							title:'删除成功',
-							icon:'success',
+							title: '删除成功',
+							icon: 'success',
 						})
 					})
 				}

@@ -1,7 +1,8 @@
 <template>
 
 	<view class="content">
-		<z-paging ref="paging" v-model="pagingActivityList" @query="freshActivity" :fixed="false" show-refresher-update-time>
+		<z-paging ref="paging" v-model="pagingActivityList" @query="freshActivity" :fixed="false"
+			show-refresher-when-reload auto-show-back-to-top show-refresher-update-time>
 			<cell v-for="(item, index) in pagingActivityList" :key="item.id">
 				<view class="list-item" :class="isFirst(index)">
 					<view class="list-item-header" @click="listItemHeaderOnClickEvent(item)">
@@ -54,6 +55,10 @@
 				type: Number,
 				required: true
 			},
+			classId: {
+				type: Number,
+				required: true
+			},
 			uToast: {
 				required: true
 			}
@@ -65,19 +70,16 @@
 
 				actionSheetIsShow: false,
 				actionSheetActions: ['普通签到', '拍照签到'],
+
 			}
 		},
 		computed: {
 			activityList() {
-				let r = this.$store.getters['course/activitiesByCourseId'](this.courseId)
-				console.log(`this.$store.getters['course/activitiesByCourseId'](this.courseId)`, r)
+				let r = this.$store.getters['course/activitiesByCourseId'](this.courseId, this.classId)
+				console.log(`this.$store.getters['course/activitiesByCourseId'](this.courseId)`, this.courseId, this
+					.classId, r,this.$store.state.course.courseList)
 				return r
 			}
-		},
-		watch: {
-			// activityList(val) {
-			// 	this.pagingActivityList = val
-			// }
 		},
 		methods: {
 			/**
@@ -108,11 +110,14 @@
 			 * @description 刷新所有活动
 			 */
 			async freshActivity(pageNo, pageSize) {
-				if(pageNo!==1){
+				if (pageNo !== 1) {
 					this.$refs.paging.complete()
 					return
 				}
-				await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
+				let list = await this.$store.dispatch('course/getActivitiesOfOneCourse', {
+					courseId: this.courseId,
+					classId: this.classId
+				})
 				this.$refs.paging.complete(this.activityList)
 			},
 
@@ -248,7 +253,11 @@
 									plus.nativeUI.toast(responseData)
 									return null;
 								}
-								plus.nativeUI.toast('签到成功')
+								// plus.nativeUI.toast('签到成功')
+								uni.showToast({
+									title:'签到成功',
+									icon:'success'
+								})
 							})
 						}
 						break;
@@ -272,10 +281,18 @@
 				if (isShowToast) {
 					uni.hideLoading()
 					if (result !== true) {
-						plus.nativeUI.toast(result)
+						uni.showToast({
+							title:result,
+							position:'center'
+						})
+						// plus.nativeUI.toast(result)
 						return null;
 					}
-					plus.nativeUI.toast('签到成功')
+					// plus.nativeUI.toast('签到成功')
+					uni.showToast({
+						title:'签到成功',
+						icon:'success'
+					})
 				}
 			},
 
