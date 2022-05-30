@@ -6,7 +6,7 @@
 
 		<swiper class="tab-view" @change="onChangeSwiper" :current="currentIndex">
 			<swiper-item class="tab-bar-view" v-for="(tab,index) in tabList" :key="tab.current" :item-id="tab.current">
-				<swiperPage class="swiper-page" :course-id="tab.courseId"></swiperPage>
+				<swiperPage class="swiper-page" :course-id="tab.courseId" :class-id='tab.classId'></swiperPage>
 			</swiper-item>
 		</swiper>
 	</z-paging-swiper>
@@ -46,11 +46,13 @@
 				courseList: s => s.course.courseList
 			}),
 			tabList() {
-				return [{
-						current: 0,
-						courseId: 0,
-						name: '全部',
-					},
+				return [
+					// {
+					// 	current: 0,
+					// 	courseId: 0,
+					// 	classId: 0,
+					// 	name: '全部',
+					// },
 					...this.realTabList
 				]
 			},
@@ -64,10 +66,10 @@
 						// 其中this.innerCurrent就是这里设置的ID
 						current: Number(index + 1),
 						courseId: Number(value.courseId),
+						classId: Number(value.classId),
 						name: value.name,
 					})
 				})
-				// this.realTabList = list
 				return list
 			}
 		},
@@ -102,7 +104,7 @@
 					this.currentIndex = index
 			},
 			async init() {
-				await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
+				// await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
 				uni.$on(Constant.globalEmitEvent.onSwitchToActivityTab, this.onSwitchToActivityTab)
 			}
 		},

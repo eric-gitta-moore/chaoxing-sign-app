@@ -17,11 +17,9 @@
 				"navigationBarTitleText": "账号信息",
 				"app-plus": {
 					"titleNView": {
-						"buttons": [
-							{
-								"type": "menu"
-							}
-						]
+						"buttons": [{
+							"type": "menu"
+						}]
 					}
 				}
 			}
@@ -32,11 +30,16 @@
 				"navigationBarTitleText": "登录"
 			}
 
+		},
+		{
+			"path": "platforms/app-plus/feedback/feedback",
+			"style": {
+				"navigationBarTitleText": "问题反馈"
+			}
 		}
 	],
 	"tabBar": {
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/index/index",
 				"text": "课程"
 			},

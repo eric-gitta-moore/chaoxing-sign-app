@@ -24,8 +24,12 @@ async function getCourse() {
 	// 	}))
 	// }
 	// return courseArr
-
-	let r = await userApi.getCourse()
+	let r = null;
+	try {
+		r = await userApi.getCourse()
+	} catch (e) {
+		return []
+	}
 	let html = r.data
 
 	let nameRex = /class="course-name overHidden2" title="(?<name>.*?)"/g
@@ -116,6 +120,9 @@ async function generalSign(context, activity) {
 	})
 	if (r.data === 'success')
 		return true
+	else if (r.data === '非法请求') {
+		return `服务器返回：${r.data}\n表示签到已经结束`
+	}
 	return r.data
 }
 

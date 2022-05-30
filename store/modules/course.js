@@ -16,11 +16,13 @@ const mutations = {
 	},
 	SET_ACTIVITIES(state, {
 		courseId,
+		classId,
 		activities
 	}) {
 		for (let course of state.courseList) {
-			if (course.courseId === courseId) {
+			if (Number(course.courseId) === Number(courseId) && Number(course.classId) == Number(classId)) {
 				course.activities = activities
+				return state.courseList
 			}
 		}
 	}
@@ -52,7 +54,7 @@ const actions = {
 				data: courseList
 			})
 		}
-		console.warn(courseList,forceRefresh)
+		// console.warn(courseList, forceRefresh)
 		context.commit('SET_LIST', courseList)
 		return courseList
 	},
@@ -63,6 +65,7 @@ const actions = {
 		let activities = await courseBiz.getActivities(courseId, classId)
 		context.commit('SET_ACTIVITIES', {
 			courseId,
+			classId,
 			activities
 		})
 		return activities
@@ -75,6 +78,7 @@ const actions = {
 			})
 			context.commit('SET_ACTIVITIES', {
 				courseId: course.courseId,
+				classId: course.classId,
 				activities
 			})
 		}
@@ -105,19 +109,19 @@ const getters = {
 
 		return active.concat(unactive)
 	},
-	oneActivities: (state, getters) => (courseId) => {
+	oneActivities: (state, getters) => (courseId, classId) => {
 		for (let item of state.courseList) {
-			if (Number(item.courseId) === Number(courseId)) {
+			if (Number(item.courseId) === Number(courseId) && Number(item.classId) == Number(classId)) {
 				return item.activities
 			}
 		}
 		return null
 	},
-	activitiesByCourseId: (state, getters) => (id) => {
-		if (id == 0) {
+	activitiesByCourseId: (state, getters) => (courseId, classId = 0) => {
+		if (courseId == 0) {
 			return getters.allActivities
 		}
-		return getters.oneActivities(id)
+		return getters.oneActivities(courseId, classId)
 	}
 }
 
