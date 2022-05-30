@@ -35,43 +35,52 @@ async function getCourse() {
 
 	let nameRex = /class="course-name overHidden2" title="(?<name>.*?)"/g
 	let courseIdClassIdRex = /id="course_(?<courseId>\d+)_(?<classId>\d+)"/g
-	let imgRex = /<img\s*?src="(?<img>https\S+\.\w{3,4})">/g
+	let imgRex = /<img\s*?src="(?<img>\S+\.\w{3,4})">/g
 	let summaryRex = /<p class="margint10 line2" title="(?<summary>.*?)">/g
 	let teacherRex = /<p class="line2" title="(?<teacher>.*?)">/g
 	let classNameRex = /<p class="overHidden1">(?<className>.*?)<\/p>/g
 	while (1) {
-		let nameMatch = nameRex.exec(html)?.groups
-		if (!nameMatch)
-			break;
-		let {
-			name
-		} = nameMatch
-		// console.log(name)
-		let {
-			courseId,
-			classId
-		} = courseIdClassIdRex.exec(html).groups
-		let {
-			img
-		} = imgRex.exec(html).groups
-		let {
-			summary
-		} = summaryRex.exec(html).groups
-		let {
-			teacher
-		} = teacherRex.exec(html).groups
-		let {
-			className
-		} = classNameRex.exec(html).groups
-		courseArr.push(new CourseEntity({
-			name,
-			courseId,
-			classId,
-			className,
-			img,
-			summary,
-			teacher
-		}))
+		try {
+			let nameMatch = nameRex.exec(html)?.groups
+			if (!nameMatch)
+				break;
+			let {
+				name
+			} = nameMatch
+			// console.log(name)
+			let {
+				courseId,
+				classId
+			} = courseIdClassIdRex.exec(html).groups
+			let {
+				img
+			} = imgRex.exec(html).groups
+			if (img.indexOf('http') !== 0) img = `http://mooc1-1.chaoxing.com/${img}`
+			let {
+				summary
+			} = summaryRex.exec(html).groups
+			let {
+				teacher
+			} = teacherRex.exec(html).groups
+			let {
+				className
+			} = classNameRex.exec(html).groups
+			courseArr.push(new CourseEntity({
+				name,
+				courseId,
+				classId,
+				className,
+				img,
+				summary,
+				teacher
+			}))
+		} catch (e) {
+			console.error(e)
+			uni.showToast({
+				title: '部分课程加载失败',
+				position: 'center'
+			})
+		}
 	}
 	return courseArr
 }

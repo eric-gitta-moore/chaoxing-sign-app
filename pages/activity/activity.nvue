@@ -98,7 +98,6 @@
 					index,
 					courseId
 				} = params
-				index++;
 				if (params &&
 					this.tabList[index])
 					this.currentIndex = index
