@@ -37,10 +37,12 @@
 								@click="toClipboard(item)">
 							</u-cell>
 							<u-cell title="浅分享一下APP吧!" size='large' :isLink="true" @click="shareApp"></u-cell>
-							<u-cell title="检查更新" size='large' :isLink="true" @click="checkUpdate"></u-cell>
 							<u-cell title="问题反馈" label="什么有bug!快告诉开发者,一起干ta" size='large' :isLink="true"
 								@click="gotoFeedback"></u-cell>
 							<u-cell title="GitHub仓库" size='large' :isLink="true" @click="gotoGithub"></u-cell>
+							<u-cell title="QQ交流群" label='什么!汤臣一品？!' size='large' :isLink="true" @click="gotoQQGroup">
+							</u-cell>
+							<u-cell title="检查更新" size='large' :isLink="true" @click="checkUpdate"></u-cell>
 						</u-cell-group>
 					</view>
 					<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
@@ -109,6 +111,20 @@
 			})
 		},
 		methods: {
+			gotoQQGroup() {
+				let group = '627824424'
+				plus.nativeUI.confirm(`QQ群号码是${group}`, function(e) {
+					console.log("plus.nativeUI.confirm", e)
+					if (e.index == 1) {
+						uni.setClipboardData({
+							data: group
+						})
+					}
+				}, {
+					"title": `QQ群`,
+					"buttons": ["取消", "复制"],
+				});
+			},
 			getAppId() {
 				return Constant.APPID
 			},
