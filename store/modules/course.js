@@ -32,28 +32,29 @@ const actions = {
 	/**
 	 * 获取课程列表
 	 */
-	async getCourseList(context, forceRefresh = false) {
+	async getCourseList(context, forceRefresh = true) {
 		let courseList = context.state.courseList
-		if (courseList.length === 0) {
-			let storage = await uni.getStorage({
-				key: Constant.courseList
-			})
-			// debugger
-			if (storage.length === 2) {
-				courseList = []
-				for (let item of storage[1].data) {
-					courseList.push(new CourseEntity(item))
-				}
-			}
-		}
-		if (courseList.length === 0 || forceRefresh) {
-			courseList = await courseBiz.getCourse()
-			// debugger
-			uni.setStorage({
-				key: Constant.courseList,
-				data: courseList
-			})
-		}
+		// if (courseList.length === 0) {
+		// 	let storage = await uni.getStorage({
+		// 		key: Constant.courseList
+		// 	})
+		// 	// debugger
+		// 	if (storage.length === 2) {
+		// 		courseList = []
+		// 		for (let item of storage[1].data) {
+		// 			courseList.push(new CourseEntity(item))
+		// 		}
+		// 	}
+		// }
+		// if (courseList.length === 0 || forceRefresh) {
+		// 	courseList = await courseBiz.getCourse()
+		// 	// debugger
+		// 	uni.setStorage({
+		// 		key: Constant.courseList,
+		// 		data: courseList
+		// 	})
+		// }
+		courseList = await courseBiz.getCourse()
 		// console.warn(courseList, forceRefresh)
 		context.commit('SET_LIST', courseList)
 		return courseList

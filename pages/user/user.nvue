@@ -202,11 +202,6 @@
 				account,
 				pwd
 			}) {
-				uni.removeStorageSync(Constant.cookieStorageKey)
-				console.log(`%c loginAs.UserBiz.doLogin`, `color:skyblue`, {
-					account,
-					pwd
-				})
 				let r = UserBiz.doLogin(this, {
 					account,
 					pwd

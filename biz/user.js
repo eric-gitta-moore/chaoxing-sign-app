@@ -1,5 +1,6 @@
 import userApi from '../api/user.js'
 import UserEntity from '@/entity/User.js'
+import WeappCookie from 'weapp-cookie'
 
 /**
  * 登录
@@ -13,6 +14,13 @@ async function login({
 	validateCode
 }, raw = false) {
 	// await userApi.loginPage()
+
+	console.log(`WeappCookie.dir()`, WeappCookie.getCookies())
+	WeappCookie.clearCookies()
+	console.log(`%c loginAs.UserBiz.doLogin`, `color:skyblue`, {
+		account,
+		pwd
+	}, WeappCookie.getCookies())
 	let r = await userApi.login({
 		account,
 		pwd,
@@ -116,8 +124,8 @@ async function doLogin(context, {
 	// 		await context.$store.dispatch('user/getLoginParams')
 	// 		await context.$store.dispatch('course/getCourseList', true)
 	// 		await context.$store.dispatch('course/refreshActivitiesOfAllCourse')
-			
-			
+
+
 	// 		uni.unPreloadPage({
 	// 			url: "/pages/activity/activity"
 	// 		})
@@ -130,7 +138,7 @@ async function doLogin(context, {
 	// 		uni.preloadPage({
 	// 			url: "/pages/user/user"
 	// 		});
-			
+
 	// 	}
 	// 	a()
 	// }, 0)
