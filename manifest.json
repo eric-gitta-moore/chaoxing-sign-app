@@ -2,8 +2,8 @@
     "name" : "学习通手动挡签到",
     "appid" : "__UNI__C397F39",
     "description" : "",
-    "versionName" : "1.2.0",
-    "versionCode" : 120,
+    "versionName" : "1.2.1",
+    "versionCode" : 121,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
