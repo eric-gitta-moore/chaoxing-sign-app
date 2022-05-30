@@ -25,7 +25,8 @@ http.interceptors.response.use((r) => {
 	if (r.data.indexOf('<title>用户登录') !== -1 || r.data.indexOf('请重新登录!</a>') !== -1 || r.data.indexOf(
 			'<title>新用户注册') !== -1) {
 		console.warn(`Promise.reject('登录过期')`, r)
-		uni.clearStorage()
+		// uni.clearStorage()
+		WeappCookies.clearCookies()
 		uni.showToast({
 			title:'请登录',
 			icon:'error',

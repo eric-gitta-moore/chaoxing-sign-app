@@ -43,6 +43,7 @@
 							<u-cell title="QQ交流群" label='什么!汤臣一品？!' size='large' :isLink="true" @click="gotoQQGroup">
 							</u-cell>
 							<u-cell title="检查更新" size='large' :isLink="true" @click="checkUpdate"></u-cell>
+							<u-cell title="调试按钮" size='large' :isLink="true" @click="debugBtn"></u-cell>
 						</u-cell-group>
 					</view>
 					<u-button class="loginBtn" type="primary" @click="toLogin" text="登陆/重新登录"></u-button>
@@ -55,6 +56,7 @@
 </template>
 
 <script>
+	import WeappCookie from 'weapp-cookie'
 	import UserBiz from '@/biz/user.js'
 	import UserEntity from '@/entity/User.js'
 	import Constant from '@/const.js'
@@ -111,6 +113,9 @@
 			})
 		},
 		methods: {
+			debugBtn() {
+				console.log('WeappCookie chaoxing.com', WeappCookie.getCookies('chaoxing.com'), WeappCookie.dir())
+			},
 			gotoQQGroup() {
 				let group = '627824424'
 				plus.nativeUI.confirm(`QQ群号码是${group}`, function(e) {
