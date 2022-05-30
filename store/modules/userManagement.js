@@ -14,7 +14,7 @@ const state = {
 
 const mutations = {
 	SET_ACCOUNT(state, arr) {
-		if (!(arr instanceof Array)) arr = [arr]
+		if (!Array.isArray(arr)) arr = [arr]
 		// 关联数组
 		arr = arr.reduce((prev, cur, index) => {
 			prev[cur.account] = cur

@@ -215,9 +215,11 @@
 					title: '切换成功',
 					icon: 'success',
 					success: () => {
-						uni.reLaunch({
-							url: '/pages/user/user',
-						})
+						setTimeout(() => {
+							uni.reLaunch({
+								url: '/pages/user/user',
+							})
+						}, 500)
 					}
 				})
 				return true

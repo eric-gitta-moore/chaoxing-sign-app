@@ -26,6 +26,10 @@ http.interceptors.response.use((r) => {
 			'<title>新用户注册') !== -1) {
 		console.warn(`Promise.reject('登录过期')`, r)
 		uni.clearStorage()
+		uni.showToast({
+			title:'请登录',
+			icon:'error',
+		})
 		// console.log('uni.getStorageInfoSync', uni.getStorageInfoSync())
 		return Promise.reject('登录过期')
 	}
