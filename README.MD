@@ -1,5 +1,5 @@
 <h1 align="center">超星学习通签到-APP版</h1>
-支持多账号切换
+##### 支持多账号切换
 
 **实现的签到类型：** 普通签到（没必要用这个程序）、拍照签到（任选照片）、手势签到（不需要知道手势）、位置签到（任选位置）、二维码签到（无视十秒）、签到码签到（不需要知道签到码）
 
@@ -9,7 +9,11 @@
 
 ## 截图
 
-<img src="./readme_static/1.gif" width="50%"/><img src="http://tva1.sinaimg.cn/large/008d89Swgy1h2239bf78rj30o01hc779.jpg" width="50%"/>
+<img src="./readme_static/1.gif" width="48%"/><img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwyva0vj30u01uo0xn.jpg" width="48%"/>
+
+<img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwytag4j30u01uodna.jpg" width="48%"/><img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwzy6xvj30u01uoh2r.jpg" width="48%"/>
+
+<img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qx2zkr9bj30u01uon00.jpg" width="48%"/>
 
 ## 使用
 
