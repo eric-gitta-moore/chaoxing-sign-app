@@ -141,6 +141,31 @@ function locationSign({
 	})
 }
 
+function preSign({
+	uf,
+	_d,
+	vc3,
+	activeId,
+	classId,
+	courseId,
+	uid
+}) {
+	return http.get('https://mobilelearn.chaoxing.com/newsign/preSign', {
+		params: {
+			general: 1,
+			sys: 1,
+			ls: 1,
+			appType: 15,
+			tid: '',
+			ut: 's',
+			uid,
+			activePrimaryId: activeId,
+			classId,
+			courseId,
+		}
+	})
+}
+
 export default {
 	getActivities,
 	generalSign,
@@ -149,4 +174,5 @@ export default {
 	photoSign,
 	getPanToken,
 	chaoxingPanUpload,
+	preSign
 }

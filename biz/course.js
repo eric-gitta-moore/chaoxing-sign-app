@@ -5,6 +5,7 @@ import ActivityEntity from '../entity/Activity.js'
 import {
 	gcj02tobd09
 } from '@/util/CoordinateSystemHelper.js'
+import WeappCookie from 'weapp-cookie'
 
 /**
  * 获取根目录下所有课程
@@ -101,9 +102,24 @@ async function getActivities(courseId, classId) {
 			extraInfo: item?.extraInfo,
 			otherId: item?.otherId,
 			source: item?.source,
+			courseId,
+			classId
 		}))
 	}
 	return arr;
+}
+
+async function beforeSignAction({
+	activeId,
+	classId,
+	courseId
+}) {
+	await CourseApi.preSign({
+		...getLoginParams(),
+		activeId,
+		classId,
+		courseId
+	})
 }
 
 /**
@@ -112,10 +128,16 @@ async function getActivities(courseId, classId) {
  * @param {ActivityEntity} activity
  */
 async function generalSign(context, activity) {
-	let r = await CourseApi.generalSign({
+	await beforeSignAction({
 		activeId: activity.id,
-		uid: context.$store.state.user.loginParams._uid,
-		fid: context.$store.state.user.loginParams.fid,
+		classId: activity.classId,
+		courseId: activity.courseId
+	})
+	let r = await CourseApi.generalSign({
+		...getLoginParams(),
+		activeId: activity.id,
+		// uid: context.$store.state.user.loginParams._uid,
+		// fid: context.$store.state.user.loginParams.fid,
 		name: context.$store.state.user.name,
 	})
 	if (r.data === 'success')
@@ -132,10 +154,17 @@ async function generalSign(context, activity) {
  * @param objectId 图片在超星云盘中的id
  */
 async function photoSign(context, activity, objectId) {
-	let r = await CourseApi.photoSign({
+	await beforeSignAction({
 		activeId: activity.id,
-		uid: context.$store.state.user.loginParams._uid,
-		fid: context.$store.state.user.loginParams.fid,
+		classId: activity.classId,
+		courseId: activity.courseId
+	})
+	let r = await CourseApi.photoSign({
+		...getLoginParams(),
+		activeId: activity.id,
+		// uid: context.$store.state.user.loginParams._uid,
+		// fid: context.$store.state.user.loginParams.fid,
+
 		name: context.$store.state.user.name,
 		objectId
 	})
@@ -149,11 +178,17 @@ async function photoSign(context, activity, objectId) {
  * @param context vue组件上下文
  */
 async function QRCodeSign(context, activity, enc) {
+	await beforeSignAction({
+		activeId: activity.id,
+		classId: activity.classId,
+		courseId: activity.courseId
+	})
 	let r = await CourseApi.QRCodeSign({
+		...getLoginParams(),
 		enc,
 		activeId: activity.id,
-		uid: context.$store.state.user.loginParams._uid,
-		fid: context.$store.state.user.loginParams.fid,
+		// uid: context.$store.state.user.loginParams._uid,
+		// fid: context.$store.state.user.loginParams.fid,
 		name: context.$store.state.user.name,
 	})
 	if (r.data === 'success')
@@ -171,17 +206,23 @@ async function locationSign(context, activity, {
 	latitude,
 	longitude
 }) {
+	await beforeSignAction({
+		activeId: activity.id,
+		classId: activity.classId,
+		courseId: activity.courseId
+	})
 	let decode = gcj02tobd09(longitude, latitude)
 	let lon = decode[0],
 		lan = decode[1]
 	let r = await CourseApi.locationSign({
+		...getLoginParams(),
 		activeId: activity.id,
-		uid: context.$store.state.user.loginParams._uid,
-		fid: context.$store.state.user.loginParams.fid,
+		// uid: context.$store.state.user.loginParams._uid,
+		// fid: context.$store.state.user.loginParams.fid,
 		name: context.$store.state.user.name,
-		uf: context.$store.state.user.uf,
-		_d: context.$store.state.user._d,
-		vc3: context.$store.state.user.vc3,
+		// uf: context.$store.state.user.uf,
+		// _d: context.$store.state.user._d,
+		// vc3: context.$store.state.user.vc3,
 		address,
 		latitude: lan,
 		longitude: lon,
@@ -200,7 +241,7 @@ async function chaoxingPanUpload(context, activity, filePath) {
 	let tokenResponse = await CourseApi.getPanToken()
 	let _token = tokenResponse.data._token
 	let uploadResponse = await CourseApi.chaoxingPanUpload(filePath,
-		context.$store.state.user.loginParams._uid, _token)
+		getLoginParams()['_uid'], _token)
 	if (uploadResponse.data.msg === 'success') {
 		return {
 			objectId: uploadResponse.data.data.objectId,
@@ -208,6 +249,15 @@ async function chaoxingPanUpload(context, activity, filePath) {
 		}
 	}
 	return null
+}
+
+function getLoginParams() {
+	let r = {}
+	let cookies = WeappCookie.getCookies('chaoxing.com')
+	for (let item in cookies) {
+		r[item.toLowerCase()] = cookies[item]
+	}
+	return r
 }
 
 

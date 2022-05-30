@@ -15,9 +15,12 @@ class Activity {
 		endTime,
 		status,
 		nameFour,
+		courseId,
+		classId,
 		extraInfo = [],
 		otherId = null,
 		source = null,
+		
 	}) {
 		this.userStatus = userStatus
 		this.nameTwo = nameTwo
@@ -38,6 +41,8 @@ class Activity {
 
 		this.otherId = otherId
 		this.source = source
+		this.courseId = courseId
+		this.classId = classId
 	}
 }
 
