@@ -99,17 +99,16 @@
 					index,
 					courseId
 				} = params
-				if (params &&
-					this.tabList[index])
-					this.currentIndex = index
+				// if (params &&
+				// 	this.tabList[index])
+				this.currentIndex = index
 			},
-			async init() {
-				// await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
-				uni.$on(Constant.globalEmitEvent.onSwitchToActivityTab, this.onSwitchToActivityTab)
-			}
+			// async init() {
+			// 	// await this.$store.dispatch('course/refreshActivitiesOfAllCourse')
+			// }
 		},
 		onLoad() {
-			this.init()
+			uni.$on(Constant.globalEmitEvent.onSwitchToActivityTab, this.onSwitchToActivityTab)
 		},
 	}
 </script>

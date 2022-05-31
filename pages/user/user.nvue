@@ -223,22 +223,28 @@
 				account,
 				pwd
 			}) {
-				let r = UserBiz.doLogin(this, {
+				// uni.showLoading({
+				// 	title:'正在切换账号',
+				// 	mask:true
+				// })
+				return await UserBiz.doLogin(this, {
 					account,
 					pwd
-				})
-				if (r === false) return false;
-				uni.showToast({
-					title: '切换成功',
-					icon: 'success',
-					success: () => {
-						setTimeout(() => {
-							uni.reLaunch({
-								url: '/pages/user/user',
-							})
-						}, 500)
-					}
-				})
+				}, '切换成功', '正在切换账号')
+				// uni.hideLoading()
+				// if (r === false) return false;
+				// uni.showToast({
+				// 	title: '切换成功',
+				// 	icon: 'success',
+				// 	success: () => {
+				// 		this.$store.dispatch('user/clear')
+				// 		setTimeout(() => {
+				// 			uni.reLaunch({
+				// 				url: '/pages/user/user',
+				// 			})
+				// 		}, 500)
+				// 	}
+				// })
 				return true
 			},
 			onSwipeActionClick(e, index) {

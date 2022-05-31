@@ -12,17 +12,6 @@ const state = {
 	school: '',
 	account: '',
 	pwd: '',
-
-	/**
-	 * @deprecated
-	 */
-	loginParams: {
-		fid: '',
-		_uid: '',
-		uf: '',
-		_d: '',
-		vc3: '',
-	},
 }
 
 const mutations = {
@@ -37,18 +26,10 @@ const mutations = {
 			state[key] = info[key]
 		}
 	},
-
-	/**
-	 * @param {Object} state
-	 * @param {Object} p
-	 * @deprecated
-	 */
-	SET_LOGINPARAMS(state, p) {
-		state.loginParams.fid = p.fid
-		state.loginParams._uid = p._uid
-		state.loginParams.uf = p.uf
-		state.loginParams._d = p._d
-		state.loginParams.vc3 = p.vc3
+	SET_CLEAR(state){
+		for(let k in Object.keys(state)){
+			state[k]=''
+		}
 	}
 }
 
@@ -101,7 +82,7 @@ const actions = {
 	 * 获取用户信息，并自动缓存
 	 * @param {Object} context
 	 */
-	async getUserInfo(context, forceRefesh = false) {
+	async getUserInfo(context, forceRefesh = true) {
 		let userEntity = context.getters.userEntity
 		if (userEntity.phone === '') {
 			let storage = await uni.getStorage({
@@ -126,6 +107,9 @@ const actions = {
 		})
 		context.commit('SET_INFO', userEntity)
 		return userEntity
+	},
+	 clear(context){
+		context.commit('SET_CLEAR')
 	}
 }
 
