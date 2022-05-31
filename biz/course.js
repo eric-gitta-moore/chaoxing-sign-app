@@ -249,8 +249,9 @@ async function locationSign(context, activity, {
 async function chaoxingPanUpload(context, activity, filePath) {
 	let tokenResponse = await CourseApi.getPanToken()
 	let _token = tokenResponse.data._token
-	let uploadResponse = await CourseApi.chaoxingPanUpload(filePath,
-		getLoginParams()['_uid'], _token)
+	console.log(`getLoginParams`, getLoginParams())
+	let uid = getLoginParams()['_uid'] || getLoginParams()['uid']
+	let uploadResponse = await CourseApi.chaoxingPanUpload(filePath, uid, _token)
 	console.log(`uploadResponse`, uploadResponse)
 
 	if (uploadResponse.data.msg === 'success') {
