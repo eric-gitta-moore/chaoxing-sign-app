@@ -56,10 +56,10 @@
 </template>
 
 <script>
-	import WeappCookie from 'weapp-cookie'
 	import UserBiz from '@/biz/user.js'
 	import UserEntity from '@/entity/User.js'
 	import Constant from '@/const.js'
+	import WeappCookies from 'weapp-cookie'
 	import {
 		mapGetters,
 		mapState
@@ -114,8 +114,8 @@
 		},
 		methods: {
 			debugBtn() {
-				console.log('WeappCookie chaoxing.com', WeappCookie.getCookies('chaoxing.com'))
-				console.log(`WeappCookie.dir`, WeappCookie.dir(), WeappCookie.getCookies())
+				console.log('WeappCookie chaoxing.com', WeappCookies.getCookies('chaoxing.com'))
+				console.log(`WeappCookie.dir`, WeappCookies.dir(), WeappCookies.getCookies())
 				console.log(Constant.cookieStorageKey, uni.getStorageSync(Constant.cookieStorageKey))
 			},
 			gotoQQGroup() {

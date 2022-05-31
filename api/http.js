@@ -1,8 +1,8 @@
 // const http = uni.$u.http
 import Request from '@/js_sdk/luch-request/luch-request/index.js' // 下载的插件
-import WeappCookies from 'weapp-cookie'
 import Constant from '@/const.js'
 const http = new Request();
+import WeappCookies from 'weapp-cookie'
 
 http.interceptors.request.use((r) => {
 
