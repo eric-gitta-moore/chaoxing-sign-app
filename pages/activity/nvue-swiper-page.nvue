@@ -1,7 +1,7 @@
 <template>
 
 	<view class="content">
-		<z-paging ref="paging" v-model="pagingActivityList" @query="freshActivity" :fixed="false"
+		<z-paging ref="paging" v-model="pagingActivityList" @query="freshActivity" :auto='false' :fixed="false"
 			show-refresher-when-reload auto-show-back-to-top show-refresher-update-time>
 			<cell v-for="(item, index) in pagingActivityList" :key="item.id">
 				<view class="list-item" :class="isFirst(index)">
@@ -59,7 +59,12 @@
 				type: Number,
 				required: true
 			},
-			uToast: {
+			currentShowIndex: {
+				type: Number,
+				required: true
+			},
+			myIndex: {
+				type: Number,
 				required: true
 			}
 		},
@@ -70,6 +75,8 @@
 
 				actionSheetIsShow: false,
 				actionSheetActions: ['普通签到', '拍照签到'],
+				isShow: false,
+				initDone: false,
 
 			}
 		},
@@ -77,8 +84,26 @@
 			activityList() {
 				let r = this.$store.getters['course/activitiesByCourseId'](this.courseId, this.classId)
 				console.log(`this.$store.getters['course/activitiesByCourseId'](this.courseId)`, this.courseId, this
-					.classId, r,this.$store.state.course.courseList)
+					.classId, r, this.$store.state.course.courseList)
 				return r
+			}
+		},
+		watch: {
+			currentShowIndex: {
+				handler: function(newVal) {
+					console.log('currentShowIndex', newVal)
+					if (newVal == this.myIndex) {
+						this.isShow = true
+						if (!this.initDone) {
+							this.$nextTick(function(){
+								this.$refs.paging.reload(true)
+								this.initDone = true
+							})
+						}
+
+					} else this.isShow = false
+				},
+				immediate: true
 			}
 		},
 		methods: {
@@ -110,6 +135,7 @@
 			 * @description 刷新所有活动
 			 */
 			async freshActivity(pageNo, pageSize) {
+				if (!this.isShow) return;
 				if (pageNo !== 1) {
 					this.$refs.paging.complete()
 					return
@@ -242,24 +268,24 @@
 					case Constant.signType.photoSign:
 						let uploadData = await CourseBiz.chaoxingPanUpload(this, activity, params.filePath)
 						if (uploadData) {
-							isShowToast = false
-							CourseBiz.photoSign(
+							// isShowToast = false
+							result = await CourseBiz.photoSign(
 								this,
 								this.checkedActivity,
 								uploadData.objectId
-							).then((responseData) => {
-								uni.hideLoading()
-								if (responseData !== true) {
-									plus.nativeUI.toast(responseData)
-									return null;
-								}
-								// plus.nativeUI.toast('签到成功')
-								uni.showToast({
-									title:'签到成功',
-									icon:'success'
-								})
-							})
-						}
+							)
+							// uni.hideLoading()
+							// if (responseData !== true) {
+							// 	plus.nativeUI.toast(responseData)
+							// 	return null;
+							// }
+							// // plus.nativeUI.toast('签到成功')
+							// uni.showToast({
+							// 	title:'签到成功',
+							// 	icon:'success'
+							// })
+						} else
+							result = uploadData
 						break;
 					case Constant.signType.QRCodeSign:
 						console.log('allInOneSign.params', params)
@@ -282,16 +308,16 @@
 					uni.hideLoading()
 					if (result !== true) {
 						uni.showToast({
-							title:result,
-							position:'center'
+							title: result,
+							position: 'center'
 						})
 						// plus.nativeUI.toast(result)
 						return null;
 					}
 					// plus.nativeUI.toast('签到成功')
 					uni.showToast({
-						title:'签到成功',
-						icon:'success'
+						title: '签到成功',
+						icon: 'success'
 					})
 				}
 			},
@@ -324,9 +350,10 @@
 
 
 		},
-		created() {
-			// this.freshActivity()
-		}
+		// created() {
+		// 	this.freshActivity()
+
+		// }
 	}
 </script>
 

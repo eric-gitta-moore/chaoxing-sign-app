@@ -6,7 +6,8 @@
 
 		<swiper class="tab-view" @change="onChangeSwiper" :current="currentIndex">
 			<swiper-item class="tab-bar-view" v-for="(tab,index) in tabList" :key="tab.current" :item-id="tab.current">
-				<swiperPage class="swiper-page" :course-id="tab.courseId" :class-id='tab.classId'></swiperPage>
+				<swiperPage class="swiper-page" :current-show-index='currentIndex' :my-index='tab.current'
+					:course-id="tab.courseId" :class-id='tab.classId'></swiperPage>
 			</swiper-item>
 		</swiper>
 	</z-paging-swiper>
@@ -64,7 +65,7 @@
 						// 这里不能用courseId
 						// 他在里面取值的时候是按照this.list[this.innerCurrent]
 						// 其中this.innerCurrent就是这里设置的ID
-						current: Number(index + 1),
+						current: Number(index),
 						courseId: Number(value.courseId),
 						classId: Number(value.classId),
 						name: value.name,
