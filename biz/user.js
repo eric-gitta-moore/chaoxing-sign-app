@@ -96,7 +96,11 @@ async function getLoginCode() {
 async function doLogin(context, {
 	account,
 	pwd
-}) {
+}, successText = '登录成功', loadingText = '正在登陆中') {
+	uni.showLoading({
+		title: loadingText,
+		mask: true
+	})
 	let r = await context.$store.dispatch('user/login', {
 		userInfo: {
 			account,
@@ -118,30 +122,22 @@ async function doLogin(context, {
 	console.log('appendAccount', appendAccount)
 	context.$store.dispatch('userManagement/appendAccount', appendAccount)
 
-	// setTimeout(() => {
-	// 	async function a() {
-	// 		await context.$store.dispatch('user/getUserInfo')
-	// 		await context.$store.dispatch('user/getLoginParams')
-	// 		await context.$store.dispatch('course/getCourseList', true)
-	// 		await context.$store.dispatch('course/refreshActivitiesOfAllCourse')
 
+	context.$store.dispatch('course/getCourseList', false)
 
-	// 		uni.unPreloadPage({
-	// 			url: "/pages/activity/activity"
-	// 		})
-	// 		uni.unPreloadPage({
-	// 			url: "/pages/user/user"
-	// 		})
-	// 		uni.preloadPage({
-	// 			url: "/pages/activity/activity"
-	// 		});
-	// 		uni.preloadPage({
-	// 			url: "/pages/user/user"
-	// 		});
-
-	// 	}
-	// 	a()
-	// }, 0)
+	uni.hideLoading()
+	uni.showToast({
+		title: successText,
+		icon: 'success',
+		success: () => {
+			context.$store.dispatch('user/clear')
+			setTimeout(() => {
+				uni.reLaunch({
+					url: '/pages/user/user',
+				})
+			}, 500)
+		}
+	})
 
 	return user
 }

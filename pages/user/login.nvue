@@ -19,7 +19,7 @@
 			<u-button type="error" :plain="true" text="忘记密码" customStyle="margin-top: 10px" @click="forgotPasswd">
 			</u-button>
 		</u--form>
-		<u-toast ref="uToast"></u-toast>
+		<!-- <u-toast ref="uToast"></u-toast> -->
 	</view>
 </template>
 
@@ -73,64 +73,37 @@
 				} catch (e) {}
 			},
 			async login(res) {
-				let r = await this.$store.dispatch('user/login', res)
-				if (r?.status === false) {
-					this.$refs.uToast.show({
-						message: r.msg2,
-						type: 'error',
-						duration: 1000,
-					})
-					return;
-				}
-				let user = await this.$store.dispatch('user/getUserInfo', true)
-				let appendAccount = {
-					...res.userInfo,
-					name: user.name
-				}
-				console.log('appendAccount', appendAccount)
-				this.$store.dispatch('userManagement/appendAccount', appendAccount)
+				return await userBiz.doLogin(this, {
+					account: res.userInfo.account,
+					pwd: res.userInfo.pwd
+				}, '登录成功', '正在登陆中')
+				// let r = await this.$store.dispatch('user/login', res)
+				// if (r?.status === false) {
+				// 	this.$refs.uToast.show({
+				// 		message: r.msg2,
+				// 		type: 'error',
+				// 		duration: 1000,
+				// 	})
+				// 	return;
+				// }
+				// let user = await this.$store.dispatch('user/getUserInfo', true)
+				// let appendAccount = {
+				// 	...res.userInfo,
+				// 	name: user.name
+				// }
+				// console.log('appendAccount', appendAccount)
+				// this.$store.dispatch('userManagement/appendAccount', appendAccount)
 
-				// setTimeout(() => {
-				// 	let vm = this;
-				// 	async function a() {
-				// 		await vm.$store.dispatch('user/getUserInfo')
-				// 		await vm.$store.dispatch('user/getLoginParams')
-				// 		await vm.$store.dispatch('course/getCourseList', true)
-				// 		await vm.$store.dispatch('course/refreshActivitiesOfAllCourse')
-				// 		uni.unPreloadPage({
-				// 			url: "/pages/activity/activity"
+				// this.$refs.uToast.show({
+				// 	message: `你好，${user.name}`,
+				// 	type: 'success',
+				// 	duration: 1000,
+				// 	complete() {
+				// 		uni.reLaunch({
+				// 			url: '/pages/user/user'
 				// 		})
-				// 		uni.unPreloadPage({
-				// 			url: "/pages/user/user"
-				// 		})
-				// 		uni.preloadPage({
-				// 			url: "/pages/activity/activity"
-				// 		});
-				// 		uni.preloadPage({
-				// 			url: "/pages/user/user"
-				// 		});
 				// 	}
-				// 	a()
-				// }, 0)
-				this.$refs.uToast.show({
-					message: `你好，${user.name}`,
-					type: 'success',
-					duration: 1000,
-					complete() {
-						uni.reLaunch({
-							url: '/pages/user/user'
-						})
-						// uni.navigateBack({
-						// 	complete: () => {
-						// 		setTimeout(function() {
-						// 			uni.reLaunch({
-						// 				url: '/pages/user/user'
-						// 			})
-						// 		}, 500);
-						// 	}
-						// })
-					}
-				})
+				// })
 			},
 			async getLoginCodeBase64() {
 				this.codeBase64 = await userBiz.getLoginCode();
