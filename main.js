@@ -1,7 +1,6 @@
 import App from './App'
-import 'weapp-cookie'
+import WeappCookies from 'weapp-cookie'
 
-// #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false
 App.mpType = 'app'
@@ -16,24 +15,13 @@ import store from './store'
 import zConfig from '@/uni_modules/z-paging/components/z-paging/js/z-paging-config'
 zConfig.setConfig(null)
 zConfig.setConfig({
-	'loading-more-title-custom-style':{
-		'font-size':'14px'
+	'loading-more-title-custom-style': {
+		'font-size': '14px'
 	}
 })
 
 const app = new Vue({
-    ...App,
+	...App,
 	store
 })
 app.$mount()
-// #endif
-
-// #ifdef VUE3
-import { createSSRApp } from 'vue'
-export function createApp() {
-  const app = createSSRApp(App)
-  return {
-    app
-  }
-}
-// #endif

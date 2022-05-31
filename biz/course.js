@@ -5,7 +5,8 @@ import ActivityEntity from '../entity/Activity.js'
 import {
 	gcj02tobd09
 } from '@/util/CoordinateSystemHelper.js'
-import WeappCookie from 'weapp-cookie'
+import WeappCookies from 'weapp-cookie'
+
 
 /**
  * 获取根目录下所有课程
@@ -250,7 +251,7 @@ async function chaoxingPanUpload(context, activity, filePath) {
 	let tokenResponse = await CourseApi.getPanToken()
 	let _token = tokenResponse.data._token
 	console.log(`getLoginParams`, getLoginParams())
-	let uid = getLoginParams()['_uid'] || getLoginParams()['uid']
+	let uid = getLoginParams(context)['_uid'] || getLoginParams(context)['uid']
 	let uploadResponse = await CourseApi.chaoxingPanUpload(filePath, uid, _token)
 	console.log(`uploadResponse`, uploadResponse)
 
@@ -270,9 +271,9 @@ async function chaoxingPanUpload(context, activity, filePath) {
 	return uploadResponse.data?.msg || '上传失败'
 }
 
-function getLoginParams() {
+function getLoginParams(context) {
 	let r = {}
-	let cookies = WeappCookie.getCookies('chaoxing.com')
+	let cookies = WeappCookies.getCookies('chaoxing.com')
 	for (let item in cookies) {
 		r[item.toLowerCase()] = cookies[item]
 	}
