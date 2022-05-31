@@ -251,16 +251,21 @@ async function chaoxingPanUpload(context, activity, filePath) {
 	let _token = tokenResponse.data._token
 	let uploadResponse = await CourseApi.chaoxingPanUpload(filePath,
 		getLoginParams()['_uid'], _token)
+	console.log(`uploadResponse`, uploadResponse)
+
 	if (uploadResponse.data.msg === 'success') {
-		return {
+		let obj = {
 			objectId: uploadResponse.data.data.objectId,
 			previewUrl: uploadResponse.data.data.previewUrl,
 		}
+		console.log(`uploadResponse.data.msg === 'success')`, obj)
+		return obj
 	}
 	// uni.showToast({
 	// 	title:'上传失败',
 	// 	icon:'error'
 	// })
+	console.error(`function chaoxingPanUpload`, '上传失败', uploadResponse.data?.msg)
 	return uploadResponse.data?.msg || '上传失败'
 }
 

@@ -95,7 +95,7 @@
 					if (newVal == this.myIndex) {
 						this.isShow = true
 						if (!this.initDone) {
-							this.$nextTick(function(){
+							this.$nextTick(function() {
 								this.$refs.paging.reload(true)
 								this.initDone = true
 							})
@@ -257,41 +257,175 @@
 				console.log('allInOneSign.type', type)
 				let result = null,
 					isShowToast = true;
-				uni.showLoading({
-					title: '签到中',
-					mask: true,
-				})
 				switch (type) {
 					case Constant.signType.generalSign:
+						uni.showLoading({
+							title: '签到中',
+							mask: true,
+						})
 						result = await CourseBiz.generalSign(this, activity)
 						break;
 					case Constant.signType.photoSign:
-						let uploadData = await CourseBiz.chaoxingPanUpload(this, activity, params.filePath)
-						if (uploadData) {
-							// isShowToast = false
-							result = await CourseBiz.photoSign(
-								this,
-								this.checkedActivity,
-								uploadData.objectId
-							)
-							// uni.hideLoading()
-							// if (responseData !== true) {
-							// 	plus.nativeUI.toast(responseData)
-							// 	return null;
-							// }
-							// // plus.nativeUI.toast('签到成功')
+						isShowToast = false
+						/**
+						 * @description 确认选择该图片进行签到
+						 */
+						const chooseImageHandler = async (res, uploadData) => {
+							console.log(`chooseImageHandler`, res, uploadData)
+							uni.closePreviewImage()
+							if (Number(res.tapIndex) !== 0) {
+								uni.showToast({
+									title: '取消签到',
+									icon: 'error',
+								})
+								return null;
+							}
+							uni.showLoading({
+								title: '签到中',
+								mask: true,
+							})
+
+							let responseData = await CourseBiz.photoSign(this,
+								this.checkedActivity, uploadData.objectId)
+							uni.hideLoading()
+							if (responseData !== true) {
+								// 这里出问题了
+								uni.showToast({
+									title: responseData,
+									position: 'center'
+								})
+								return null;
+							}
+							uni.showToast({
+								title: '签到成功',
+								icon: 'success'
+							})
+
+						}
+
+						/**
+						 * @description 获取图片信息成功，提示是否选择该图片
+						 */
+						const previewHandler = (image, uploadData) => {
+							uni.hideLoading()
+							uni.showModal({
+								title: '提示',
+								content: '上传图片成功，请长按',
+								success: () => {
+									uni.previewImage({
+										current: 0,
+										urls: [image.path],
+										longPressActions: {
+											itemList: ['选择该图片签到', '取消签到'],
+											success: (res) => chooseImageHandler(res,
+												uploadData),
+										},
+									})
+								}
+							})
+						}
+
+						/**
+						 * @description 压缩图片成功回调
+						 */
+						const compressImageSuccessHandler = async ({
+							tempFilePath
+						}) => {
+							console.log(`compressImageSuccessHandler `, tempFilePath)
 							// uni.showToast({
-							// 	title:'签到成功',
-							// 	icon:'success'
+							// 	title: '压缩图片成功',
+							// 	position: 'center'
 							// })
-						} else
-							result = uploadData
+							let uploadData = await CourseBiz.chaoxingPanUpload(this, activity, tempFilePath)
+							console.log(`uploadData`, uploadData)
+							if (uploadData?.objectId === undefined) {
+								uni.hideLoading()
+								console.error(`uploadData?.objectId === undefined`, `上传失败`)
+								uni.showToast({
+									title: '上传失败',
+									icon: 'error'
+								})
+								throw new Error('上传图片失败')
+							}
+							console.log(`uploadData.previewUrl`, uploadData.previewUrl)
+							uni.getImageInfo({
+								src: uploadData.previewUrl,
+								success: (res) => previewHandler(res, uploadData),
+								fail() {
+									uni.hideLoading()
+									plus.nativeUI.confirm(
+										`请确认图片的格式是不是jpg或者png\n下面是图片地址：\n${uploadData.previewUrl}\n可以复制到浏览器打开看下是什么情况`,
+										(e) => {
+											if (e.index === 0)
+												uni.setClipboardData({
+													data: uploadData.previewUrl
+												})
+											else if (e.index === 1)
+												uni.showToast({
+													title: '取消签到',
+													icon: 'error'
+												})
+										}, {
+											title: '上传成功但获取预览图失败',
+											buttons: ['复制链接', '知道了']
+										})
+								}
+							})
+						}
+
+						uni.showLoading({
+							title: '压缩并上传中',
+							mask: true,
+						})
+
+						/**
+						 * @description 先压缩图片，避免超时
+						 */
+						uni.compressImage({
+							src: params.filePath,
+							success: compressImageSuccessHandler,
+							fail: () => {
+								uni.hideLoading()
+								uni.showToast({
+									title: '压缩图片失败',
+									icon: 'error'
+								})
+							}
+						})
+						// let uploadData = await CourseBiz.chaoxingPanUpload(this, activity, params.filePath)
+						// if (uploadData) {
+						// 	// isShowToast = false
+						// 	result = await CourseBiz.photoSign(
+						// 		this,
+						// 		this.checkedActivity,
+						// 		uploadData.objectId
+						// 	)
+						// 	// uni.hideLoading()
+						// 	// if (responseData !== true) {
+						// 	// 	plus.nativeUI.toast(responseData)
+						// 	// 	return null;
+						// 	// }
+						// 	// // plus.nativeUI.toast('签到成功')
+						// 	// uni.showToast({
+						// 	// 	title:'签到成功',
+						// 	// 	icon:'success'
+						// 	// })
+						// } else
+						// 	result = uploadData
 						break;
 					case Constant.signType.QRCodeSign:
+						uni.showLoading({
+							title: '签到中',
+							mask: true,
+						})
 						console.log('allInOneSign.params', params)
 						result = await CourseBiz.QRCodeSign(this, activity, params.enc)
 						break;
 					case Constant.signType.locationSign:
+						uni.showLoading({
+							title: '签到中',
+							mask: true,
+						})
 						console.log('Constant.signType.locationSign', Constant.signType.locationSign)
 						result = await CourseBiz.locationSign(this, activity, {
 							address: params.address,

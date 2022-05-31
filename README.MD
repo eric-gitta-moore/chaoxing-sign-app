@@ -64,6 +64,12 @@
 
 
 
+## 逆向
+
+1. [模拟超星网课 Android 客户端 · HonKit (hiczp.com)](https://www.hiczp.com/wang-luo/mo-ni-chao-xing-wang-ke-android-ke-hu-duan.html)
+
+
+
 ## 其他项目推荐
 
 | 项目地址                                                | 开发语言   | 备注                                           |
