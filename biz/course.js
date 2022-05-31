@@ -257,7 +257,11 @@ async function chaoxingPanUpload(context, activity, filePath) {
 			previewUrl: uploadResponse.data.data.previewUrl,
 		}
 	}
-	return null
+	// uni.showToast({
+	// 	title:'上传失败',
+	// 	icon:'error'
+	// })
+	return uploadResponse.data?.msg || '上传失败'
 }
 
 function getLoginParams() {
