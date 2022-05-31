@@ -114,7 +114,9 @@
 		},
 		methods: {
 			debugBtn() {
-				console.log('WeappCookie chaoxing.com', WeappCookie.getCookies('chaoxing.com'), WeappCookie.dir())
+				console.log('WeappCookie chaoxing.com', WeappCookie.getCookies('chaoxing.com'))
+				console.log(`WeappCookie.dir`, WeappCookie.dir(), WeappCookie.getCookies())
+				console.log(Constant.cookieStorageKey, uni.getStorageSync(Constant.cookieStorageKey))
 			},
 			gotoQQGroup() {
 				let group = '627824424'
