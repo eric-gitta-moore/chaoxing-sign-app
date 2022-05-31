@@ -1,5 +1,7 @@
 <h1 align="center">超星学习通签到-APP版</h1>
 
+<a href='https://gitclone.com'><img src='https://gitclone.com/img/title.ico' style='width:300px;'/></a>
+
 **支持多账号切换**
 
 **实现的签到类型：** 普通签到（没必要用这个程序）、拍照签到（任选照片）、手势签到（不需要知道手势）、位置签到（任选位置）、二维码签到（无视十秒）、签到码签到（不需要知道签到码）
