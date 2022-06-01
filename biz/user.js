@@ -107,6 +107,7 @@ async function doLogin(context, {
 		}
 	})
 	if (r?.status === false) {
+		uni.hideLoading()
 		plus.nativeUI.toast(r.msg2, {
 			verticalAlign: 'center',
 		})
