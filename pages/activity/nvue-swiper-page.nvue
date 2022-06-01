@@ -216,12 +216,25 @@
 						})
 						break
 					case 4: // 位置签到
+						let lastChooseLocation = uni.getStorageSync(Constant.lastChooseLocation)
+						console.log(`lastChooseLocation`, lastChooseLocation)
+						let obj = {}
+						if (lastChooseLocation?.latitude)
+							obj = {
+								latitude: Number(lastChooseLocation.latitude),
+								longitude: Number(lastChooseLocation.longitude)
+							}
 						uni.chooseLocation({
+							...obj,
 							success: (res) => {
 								console.log('位置名称：' + res.name);
 								console.log('详细地址：' + res.address);
 								console.log('纬度：' + res.latitude);
 								console.log('经度：' + res.longitude);
+								uni.setStorage({
+									data: res,
+									key: Constant.lastChooseLocation
+								})
 								this.allInOneSign(Constant.signType.locationSign, this
 									.checkedActivity, {
 										address: res.address,
