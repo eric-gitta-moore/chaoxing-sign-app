@@ -35,6 +35,7 @@
 	 * @property {String} id 应用id
 	 * @property {String} version 是否手动传入版本号而不使用系统自动获取的版本
 	 * @property {Boolean} loading 是否显示加载
+	 * @property {Boolean} isShowUpdateDialog 是否显示显示更新提示弹窗
 	 * @property {String} loadingText 加载中文本，默认'检查更新中'
 	 * @property {String} loadingMask 加载点击遮罩关闭功能是否关闭
 	 * @property {String, Number} loadingDelay 加载框多久出现，默认1500ms
@@ -86,6 +87,10 @@
 				type: [String, Number],
 				default: 1500
 			},
+			isShowUpdateDialog: {
+				type: Boolean,
+				default: true
+			},
 			lines: {
 				type: Number,
 				default: 4
@@ -135,7 +140,8 @@
 		},
 		data() {
 			return {
-				show: false,
+				// show: false,
+				isShowUpdateDialogInner: false,
 				release: {
 					"needUpdate": true,
 					"forceUpdate": true,
@@ -181,6 +187,16 @@
 			},
 			isHot: function() {
 				return !this.release.isHbuildUpdate && this.release.wgtUrl !== '';
+			},
+			show: {
+				get() {
+					if (this.isShowUpdateDialog === false)
+						return false
+					return this.isShowUpdateDialogInner
+				},
+				set(v) {
+					this.isShowUpdateDialogInner = v
+				}
 			}
 		},
 		created() {

@@ -53,7 +53,7 @@
 				</view>
 			</cell>
 		</z-paging>
-		<wrap-version-update ref="wrapVersionUpdate" :auto='false' :id="getAppId()" @check="onUpdateCheck">
+		<wrap-version-update ref="wrapVersionUpdate" :auto='false' :id="getAppId()" :isShowUpdateDialog="false" @check="onUpdateCheck">
 		</wrap-version-update>
 	</view>
 </template>
@@ -146,14 +146,16 @@
 			 * @param {Object} res
 			 */
 			onUpdateCheck(res) {
-				if (!res.needUpdate) return;
-				this.$refs.wrapVersionUpdate.$destroy()
-				// uni.showToast({
-				// 	title:'有新版本',
-				// 	position:'bottom',
-				// })
+				console.log(`onUpdateCheck(res`, res)
+				if (!res.needUpdate) {
+					uni.showToast({
+						title: `已经是最新版本${res.version}`,
+						position: 'center'
+					})
+					return null;
+				}
 				uni.showModal({
-					content: `有新版本更新,请复制下载地址,手动打开手机浏览器输入地址下载\n${res.description}\n下载链接：\n${res.pkgUrl}`,
+					content: `有新版本${res.version}\n请复制下载地址,手动打开手机浏览器输入\n更新内容：\n${res.description}\n下载链接：\n${res.pkgUrl}`,
 					confirmText: "复制",
 					success: (r) => {
 						if (r.confirm) {
