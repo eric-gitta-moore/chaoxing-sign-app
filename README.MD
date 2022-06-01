@@ -52,6 +52,14 @@
 
 
 
+## 画饼
+
+- [ ] 自动签到
+
+- [ ] 获取群聊签到，需要逆向app，用的是环信SDK
+
+- [ ] 对接阿里mPaaS扫码
+
 ## 开发
 
 1. #### NPM包
@@ -76,6 +84,7 @@
 | ------------------------------------------------------- | ---------- | ---------------------------------------------- |
 | https://github.com/cxOrz/chaoxing-sign-cli              | JavaScript | 基于 Nodejs 实现的一个签到命令行工具           |
 | https://github.com/mkdir700/chaoxing_auto_sign          | Python     | 超星学习通课堂签到&健康打卡&多用户多任务&API   |
+| https://github.com/Clansty/superstar-checkin            | TypeScript | 超星学习通自动签到工具，可以配合QQ机器人       |
 | https://github.com/Wzb3422/auto-sign-chaoxing           | TypeScript | 超星学习通自动签到，梦中刷网课                 |
 | https://github.com/Huangyan0804/AutoCheckin             | Python     | 学习通自动签到，支持手势，二维码，位置，拍照等 |
 | https://github.com/aihuahua-522/chaoxing-testforAndroid | Java       | 学习通（超星）自动签到                         |
