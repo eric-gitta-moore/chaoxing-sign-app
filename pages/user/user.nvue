@@ -19,6 +19,9 @@
 							</u-cell>
 						</u-cell-group>
 					</uni-swipe-action-item>
+					<view>
+						<u--text text='向左滑动有惊喜' type="info" align='center' size='13'></u--text>
+					</view>
 				</uni-swipe-action>
 
 			</view>
