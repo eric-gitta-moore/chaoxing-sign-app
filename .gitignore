@@ -5,6 +5,7 @@ node_modules/crypto-js
 unpackage/cache
 unpackage/dist
 unpackage/release
+unpackage/debug
 
 
 # local env files
