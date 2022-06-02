@@ -7,15 +7,37 @@
 		<swiper class="tab-view" @change="onChangeSwiper" :current="currentIndex">
 			<swiper-item class="tab-bar-view" v-for="(tab,index) in tabList" :key="tab.current" :item-id="tab.current">
 				<swiperPage class="swiper-page" :current-show-index='currentIndex' :my-index='tab.current'
-					:course-id="tab.courseId" :class-id='tab.classId'></swiperPage>
+					:course-id="tab.courseId" :class-id='tab.classId' @open-photo-upload-popup='openPhotoUploadPopup'>
+				</swiperPage>
 			</swiper-item>
 		</swiper>
+
+		<view slot='bottom'>
+			<u-popup @close="onClosePhotoUploadPopup" :show="isShowPhotoUploadPopup" :closeable="true"
+				:closeOnClickOverlay="false">
+				<view class="photo-upload-popup">
+					<uni-title type="h2" title="请上传要签到的图片" align="center"></uni-title>
+					<u-row justify="center" customStyle='margin:10px 0'>
+						<u-col span="12" align="center">
+							<u-upload @afterRead="onPhotoUploadAfterRead" :fileList="uploadFileList" accept="image"
+								maxCount="1" width='200' height="200"></u-upload>
+						</u-col>
+					</u-row>
+					<u-row justify="center">
+						<u-col span="8">
+							<u-button type="primary" text="确定" @click="confirmSign"></u-button>
+						</u-col>
+					</u-row>
+				</view>
+			</u-popup>
+		</view>
 	</z-paging-swiper>
 </template>
 
 <script>
 	import swiperPage from './nvue-swiper-page.nvue';
 	import Constant from '@/const.js'
+	import CourseBiz from '@/biz/course.js'
 
 	import {
 		mapState
@@ -27,18 +49,11 @@
 		},
 		data() {
 			return {
-				currentIndex: 0,
+				isShowPhotoUploadPopup: false,
+				uploadFileList: [],
+				checkedActivity: {},
 
-				actionSheetIsShow: false,
-				actionSheetActions: [{
-						name: '普通签到',
-						signType: Constant.signType.generalSign
-					},
-					{
-						name: '拍照签到',
-						signType: Constant.signType.photoSign,
-					},
-				],
+				currentIndex: 0,
 
 			}
 		},
@@ -75,6 +90,136 @@
 			}
 		},
 		methods: {
+
+
+			/**
+			 * @description 确认选择该图片进行签到
+			 */
+			async confirmSign() {
+				if (this.uploadFileList.length === 0) {
+					uni.showToast({
+						title: '请先上传图片',
+						icon: 'error',
+					})
+					return false
+				}
+				let objectId = this.uploadFileList[0].objectId
+				if (!objectId) {
+					uni.showToast({
+						title: '缺少图片信息',
+						icon: 'error',
+					})
+					return false
+				}
+				console.log(`async confirmSign`, this.checkedActivity, objectId)
+				uni.showLoading({
+					title: '签到中',
+					mask: true,
+				})
+
+				let responseData = await CourseBiz.photoSign(this,
+					this.checkedActivity, objectId)
+				uni.hideLoading()
+				if (responseData !== true) {
+					// 这里出问题了
+					uni.showToast({
+						title: responseData,
+						position: 'center'
+					})
+					return null;
+				}
+				this.onClosePhotoUploadPopup()
+				uni.showToast({
+					title: '签到成功',
+					icon: 'success'
+				})
+
+			},
+
+			async onPhotoUploadAfterRead(e) {
+				console.log(`async onPhotoUploadAfterRead`, e)
+				this.uploadFileList.splice(0, 1, {
+					...e.file,
+					status: 'uploading',
+					message: '压缩上传中'
+				})
+
+
+				/**
+				 * @description 压缩图片成功回调
+				 */
+				const compressImageSuccessHandler = async ({
+					tempFilePath
+				}) => {
+					console.log(`compressImageSuccessHandler `, tempFilePath)
+					let uploadData = await CourseBiz.chaoxingPanUpload(this, this.checkedActivity,
+						tempFilePath)
+					console.log(`uploadData`, uploadData)
+					if (uploadData?.objectId === undefined) {
+						let item = this.uploadFileList[0]
+						this.uploadFileList.splice(0, 1, Object.assign(item, {
+							status: 'failed',
+							message: '上传失败'
+						}))
+						throw new Error('上传图片失败')
+					}
+					console.log(`uploadData.previewUrl`, uploadData.previewUrl)
+					uni.getImageInfo({
+						src: uploadData.previewUrl,
+						success: () => {
+							let item = this.uploadFileList[0]
+							this.uploadFileList.splice(0, 1, Object.assign(item, {
+								status: 'success',
+								message: '',
+								objectId: uploadData.objectId
+							}))
+						},
+						fail() {
+							let item = this.uploadFileList[0]
+							this.uploadFileList.splice(0, 1, Object.assign(item, {
+								status: 'failed',
+								message: '预览失败'
+							}))
+							plus.nativeUI.confirm(
+								`请确认图片的格式是不是jpg或者png\n下面是图片地址：\n${uploadData.previewUrl}\n可以复制到浏览器打开看下是什么情况`,
+								(e) => {
+									if (e.index === 0)
+										uni.setClipboardData({
+											data: uploadData.previewUrl
+										})
+									else if (e.index === 1)
+										uni.showToast({
+											title: '取消签到',
+											icon: 'error'
+										})
+								}, {
+									title: '上传成功但获取预览图失败',
+									buttons: ['复制链接', '知道了']
+								})
+						}
+					})
+				}
+
+				uni.compressImage({
+					src: e.file.url,
+					success: compressImageSuccessHandler,
+					fail: () => {
+						let item = this.uploadFileList[0]
+						this.uploadFileList.splice(0, 1, Object.assign(item, {
+							status: 'failed',
+							message: '压缩失败'
+						}))
+					}
+				})
+			},
+			openPhotoUploadPopup(checkedActivity) {
+				this.isShowPhotoUploadPopup = true
+				this.checkedActivity = checkedActivity
+				this.uploadFileList = []
+			},
+			onClosePhotoUploadPopup() {
+				this.isShowPhotoUploadPopup = false
+			},
 			/**
 			 * @description tabs被切换
 			 * @param {Object} e
@@ -116,5 +261,10 @@
 <style lang="scss" scoped>
 	.tab-view {
 		flex: 1;
+	}
+
+	.photo-upload-popup {
+		margin-top: 10px;
+		margin-bottom: 20px;
 	}
 </style>
