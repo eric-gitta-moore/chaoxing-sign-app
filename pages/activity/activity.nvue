@@ -19,7 +19,7 @@
 					<u-row justify="center" customStyle='margin:10px 0'>
 						<u-col span="12" align="center">
 							<u-upload @afterRead="onPhotoUploadAfterRead" :fileList="uploadFileList" accept="image"
-								maxCount="1" width='200' height="200"></u-upload>
+								@delete="onPhotoUploadDelete" maxCount="1" width='400' height="400"></u-upload>
 						</u-col>
 					</u-row>
 					<u-row justify="center">
@@ -89,8 +89,9 @@
 			}
 		},
 		methods: {
-
-
+			onPhotoUploadDelete() {
+				this.uploadFileList = []
+			},
 			/**
 			 * @description 确认选择该图片进行签到
 			 */
