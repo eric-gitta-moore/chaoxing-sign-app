@@ -48,6 +48,7 @@
 	import CourseBiz from '@/biz/course.js'
 	import ActivityEntity from '@/entity/Activity.js'
 	import Constant from '@/const.js'
+	let mpaasScanModule = uni.requireNativePlugin("Mpaas-Scan-Module")
 
 	export default {
 		props: {
@@ -160,58 +161,88 @@
 				this.checkedActivity = activity
 				switch (Number(activity.otherId)) {
 					case 2: // 二维码签到
+
+						const gotoSign = (code) => {
+							let reg = /&enc=(?<enc>[\w\d]+)/
+							if (!reg.test(code)) {
+								plus.nativeUI.toast('enc匹配失败')
+								return null
+							}
+							let regResult = reg.exec(code)
+							console.log(regResult)
+							let enc = regResult.groups.enc
+							console.log(enc)
+							this.allInOneSign(Constant.signType.QRCodeSign, this.checkedActivity, {
+								enc
+							})
+						}
+						const chooseImageByDcloudApi = () => {
+							uni.chooseImage({
+								count: 1,
+								success: (res) => {
+									console.log(res)
+									plus.barcode.scan(res.tempFilePaths[0],
+										(type, code) => {
+											console.log(code)
+											gotoSign(code)
+										}, (error) => {
+											console.log(error)
+											plus.nativeUI.toast('扫码失败')
+										})
+								}
+							})
+						}
+						const chooseImageByAliMPaas = () => {
+							mpaasScanModule.mpaasScan({
+									// 扫码识别类型，参数可多选，qrCode、barCode，不设置，默认识别所有
+									'scanType': ['qrCode'],
+									// 是否隐藏相册，默认false不隐藏
+									'hideAlbum': false
+								},
+								(ret) => {
+									// 返回值中，resp_code 表示返回结果值，10：用户取消，11：其他错误，1000：成功
+									// 返回值中，resp_message 表示返回结果信息
+									// 返回值中，resp_result 表示扫码结果，只有成功才会有返回
+									if (ret.resp_code !== 1000) {
+										uni.showToast({
+											title: ret.resp_message,
+											position: 'center'
+										})
+										return null;
+									}
+									gotoSign(ret.resp_result)
+								})
+						}
+						const inputEnc = () => {
+							uni.showModal({
+								content: '请输入签到二维码扫描出来的内容',
+								editable: true,
+								success: (res) => {
+									gotoSign(res.content)
+									// let enc = res.content
+									// console.log(res.content)
+									// let encReg = /&enc=(\w+)/mi
+									// if (encReg.test(res.content))
+									// 	enc = encReg.exec(res.content)[1]
+									// if (res.confirm)
+									// 	this.allInOneSign(
+									// 		Constant.signType.QRCodeSign,
+									// 		this.checkedActivity, {
+									// 			enc
+									// 		})
+								}
+							})
+						}
 						uni.showActionSheet({
 							title: '请选择获取二维码信息的方法',
-							itemList: ['选择二维码图片', '直接输入enc'],
+							itemList: ['选择二维码图片', '扫码失败？试试这个', '直接输入enc'],
 							success: r => {
-								if (Number(r.tapIndex) === 0) {
-									uni.chooseImage({
-										count: 1,
-										success: (res) => {
-											console.log(res)
-											plus.barcode.scan(res.tempFilePaths[0],
-												(type, code) => {
-													console.log(code)
-													let reg = /&enc=(?<enc>[\w\d]+)/
-													if (!reg.test(code)) {
-														plus.nativeUI.toast('解码失败')
-														return null
-													}
-													let regResult = reg.exec(code)
-													console.log(regResult)
-													let enc = regResult.groups.enc
-													console.log(enc)
-													this.allInOneSign(
-														Constant.signType
-														.QRCodeSign,
-														this.checkedActivity, {
-															enc
-														})
-												}, (error) => {
-													console.log(error)
-													plus.nativeUI.toast('扫码失败')
-												})
-										}
-									})
-								} else {
-									uni.showModal({
-										content: '请输入签到二维码扫描出来的内容',
-										editable: true,
-										success: (res) => {
-											let enc = res.content
-											console.log(res.content)
-											let encReg = /&enc=(\w+)/mi
-											if (encReg.test(res.content))
-												enc = encReg.exec(res.content)[1]
-											if (res.confirm)
-												this.allInOneSign(
-													Constant.signType.QRCodeSign,
-													this.checkedActivity, {
-														enc
-													})
-										}
-									})
-								}
+								if (Number(r.tapIndex) === 0)
+									chooseImageByDcloudApi()
+								else if (Number(r.tapIndex === 1))
+									chooseImageByAliMPaas()
+								else if (Number(r.tapIndex === 2))
+									inputEnc()
 							}
 						})
 						break

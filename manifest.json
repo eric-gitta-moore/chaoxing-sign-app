@@ -47,7 +47,7 @@
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>"
                 ],
-                "abiFilters" : [ "arm64-v8a" ]
+                "abiFilters" : [ "arm64-v8a", "x86" ]
             },
             /* ios打包配置 */
             "ios" : {},
@@ -107,6 +107,41 @@
         "nvueLaunchMode" : "",
         "uniStatistics" : {
             "enable" : true
+        },
+        "nativePlugins" : {
+            "Mpaas-Scan" : {
+                "AppId" : "ALIPUBD27A303011802",
+                "License" : "ExSrMQbYTHJPphpP0y5vHcRJufe9bN7qS4qdhLn5NKPXV1/8XJ+wodp9ZT7NBjx9xql3FvRvNTR9TVLRz5qaB/pUFKs/ZB3B4ajD7Q/Aw24VboDJoDLDaTKvsLk5+LJqFMxPprT/UUmDmssod3L8x/pgtuqTvlnlDhIC9UUlSzUBq/Uhihl6Ly/pIjYhAd4tObGnMIKf0tpHD1QThZxPs+zh+9RuzTBfeHEwZpWeKv0vPeW4gWHionSjK11RdKTsSC36se+iCcruq+wWjlRYjLubpqbfXIghNwS8MqI4VMr4Xgo6QxDnGHeB/6r5pIaTTteEnDP1FHMGadx7RdwJMA==",
+                "WorkspaceId" : "default",
+                "__plugin_info__" : {
+                    "name" : "支付宝原生扫码插件",
+                    "description" : "支付宝原生扫码组件，包体积仅0.7MB，15分钟即可完成接入。同时，mPaaS提供「扫码分析」大盘",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=2636",
+                    "android_package_name" : "com.yunling.chaosign",
+                    "ios_bundle_id" : "",
+                    "isCloud" : true,
+                    "bought" : 1,
+                    "pid" : "2636",
+                    "parameters" : {
+                        "AppId" : {
+                            "des" : "Android平台的AppId，请填写Android的config文件中的appId对应的值",
+                            "key" : "mobilegw.appid",
+                            "value" : ""
+                        },
+                        "License" : {
+                            "des" : "Android平台的License,，请填写Android的config文件中的mpaasConfigLicense对应的值",
+                            "key" : "mpaasConfigLicense",
+                            "value" : ""
+                        },
+                        "WorkspaceId" : {
+                            "des" : "Android平台的WorkspaceId，请填写Android的config文件中的workspaceId对应的值",
+                            "key" : "workspaceId",
+                            "value" : ""
+                        }
+                    }
+                }
+            }
         }
     },
     "uniStatistics" : {
