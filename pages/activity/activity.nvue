@@ -13,8 +13,7 @@
 		</swiper>
 
 		<view slot='bottom'>
-			<u-popup @close="onClosePhotoUploadPopup" :show="isShowPhotoUploadPopup" :closeable="true"
-				:closeOnClickOverlay="false">
+			<u-popup @close="onClosePhotoUploadPopup" :show="isShowPhotoUploadPopup" :closeOnClickOverlay="true">
 				<view class="photo-upload-popup">
 					<uni-title type="h2" title="请上传要签到的图片" align="center"></uni-title>
 					<u-row justify="center" customStyle='margin:10px 0'>
