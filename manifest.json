@@ -2,8 +2,8 @@
     "name" : "学习通手动挡签到",
     "appid" : "__UNI__C397F39",
     "description" : "",
-    "versionName" : "1.2.8",
-    "versionCode" : 128,
+    "versionName" : "1.3.0",
+    "versionCode" : 130,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -47,7 +47,7 @@
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>"
                 ],
-                "abiFilters" : [ "arm64-v8a", "x86" ]
+                "abiFilters" : [ "arm64-v8a" ]
             },
             /* ios打包配置 */
             "ios" : {},

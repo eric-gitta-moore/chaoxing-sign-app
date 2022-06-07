@@ -8,6 +8,7 @@ http.interceptors.request.use((r) => {
 
 	r.header = {
 		'user-agent': Constant.APPUA,
+		timeout: 1000 * 10,
 		...r.header
 	}
 	// console.info('http.interceptors.request', r)
@@ -28,8 +29,8 @@ http.interceptors.response.use((r) => {
 		// uni.clearStorage()
 		WeappCookies.clearCookies()
 		uni.showToast({
-			title:'请登录',
-			icon:'error',
+			title: '请登录',
+			icon: 'error',
 		})
 		// console.log('uni.getStorageInfoSync', uni.getStorageInfoSync())
 		return Promise.reject('登录过期')
