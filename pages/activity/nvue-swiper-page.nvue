@@ -164,7 +164,11 @@
 						const gotoSign = (code) => {
 							let reg = /&enc=(?<enc>[\w\d]+)/
 							if (!reg.test(code)) {
-								plus.nativeUI.toast('enc匹配失败')
+								// plus.nativeUI.toast('enc匹配失败')
+								uni.showToast({
+									title:'enc匹配失败',
+									icon:'error'
+								})
 								return null
 							}
 							let regResult = reg.exec(code)
@@ -183,10 +187,32 @@
 									plus.barcode.scan(res.tempFilePaths[0],
 										(type, code) => {
 											console.log(code)
-											gotoSign(code)
+											let reg = /&enc=(?<enc>[\w\d]+)/
+											if (!reg.test(code)) {
+												uni.showModal({
+													title: '解码失败',
+													content: '请检查二维码是否正确',
+													showCancel: false
+												})
+												return null
+											}
+											let regResult = reg.exec(code)
+											console.log(regResult)
+											let enc = regResult.groups.enc
+											console.log(enc)
+											this.allInOneSign(
+												Constant.signType
+												.QRCodeSign,
+												this.checkedActivity, {
+													enc
+												})
 										}, (error) => {
 											console.log(error)
-											plus.nativeUI.toast('扫码失败')
+											uni.showModal({
+												title: '扫码失败',
+												content: '请用微信、支付宝或者第三方扫码，然后输入解码内容进行签到',
+												showCancel: false
+											})
 										})
 								}
 							})
@@ -242,69 +268,9 @@
 									chooseImageByAliMPaas()
 								else if (Number(r.tapIndex === 2))
 									inputEnc()
-							itemList: ['选择二维码图片', '直接输入内容或者enc'],
-							success: r => {
-								if (Number(r.tapIndex) === 0) {
-									uni.chooseImage({
-										count: 1,
-										success: (res) => {
-											console.log(res)
-											plus.barcode.scan(res.tempFilePaths[0],
-												(type, code) => {
-													console.log(code)
-													let reg = /&enc=(?<enc>[\w\d]+)/
-													if (!reg.test(code)) {
-														// plus.nativeUI.toast('解码失败')
-														uni.showModal({
-															title: '解码失败',
-															content: '请检查二维码是否正确',
-															showCancel: false
-														})
-														return null
-													}
-													let regResult = reg.exec(code)
-													console.log(regResult)
-													let enc = regResult.groups.enc
-													console.log(enc)
-													this.allInOneSign(
-														Constant.signType
-														.QRCodeSign,
-														this.checkedActivity, {
-															enc
-														})
-												}, (error) => {
-													console.log(error)
-													// plus.nativeUI.toast('扫码失败')
-													uni.showModal({
-														title: '扫码失败',
-														content: '请用微信或者系统自带的扫码，然后选择第二项直接输入内容进行签到',
-														showCancel: false
-													})
-												})
-										}
-									})
-								} else {
-									uni.showModal({
-										content: '请输入签到二维码扫描出来的内容',
-										editable: true,
-										success: (res) => {
-											let enc = res.content
-											console.log(res.content)
-											let encReg = /&enc=(\w+)/mi
-											if (encReg.test(res.content))
-												enc = encReg.exec(res.content)[1]
-											if (res.confirm)
-												this.allInOneSign(
-													Constant.signType.QRCodeSign,
-													this.checkedActivity, {
-														enc
-													})
-										}
-									})
-								}
 							}
 						})
-						break
+						break;
 					case 4: // 位置签到
 						let lastChooseLocation = uni.getStorageSync(Constant.lastChooseLocation)
 						console.log(`lastChooseLocation`, lastChooseLocation)
