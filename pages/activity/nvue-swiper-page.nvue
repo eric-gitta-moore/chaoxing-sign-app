@@ -166,8 +166,8 @@
 							if (!reg.test(code)) {
 								// plus.nativeUI.toast('enc匹配失败')
 								uni.showToast({
-									title:'enc匹配失败',
-									icon:'error'
+									title: 'enc匹配失败',
+									icon: 'error'
 								})
 								return null
 							}
@@ -229,10 +229,11 @@
 									// 返回值中，resp_message 表示返回结果信息
 									// 返回值中，resp_result 表示扫码结果，只有成功才会有返回
 									if (ret.resp_code !== 1000) {
-										uni.showToast({
-											title: ret.resp_message,
-											position: 'center'
-										})
+										if (ret.resp_code == 11)
+											uni.showToast({
+												title: ret.resp_message,
+												position: 'center'
+											})
 										return null;
 									}
 									gotoSign(ret.resp_result)
