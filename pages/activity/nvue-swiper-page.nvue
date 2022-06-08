@@ -182,30 +182,13 @@
 						const chooseImageByDcloudApi = () => {
 							uni.chooseImage({
 								count: 1,
+								sourceType: ['album'],
 								success: (res) => {
 									console.log(res)
 									plus.barcode.scan(res.tempFilePaths[0],
 										(type, code) => {
 											console.log(code)
-											let reg = /&enc=(?<enc>[\w\d]+)/
-											if (!reg.test(code)) {
-												uni.showModal({
-													title: '解码失败',
-													content: '请检查二维码是否正确',
-													showCancel: false
-												})
-												return null
-											}
-											let regResult = reg.exec(code)
-											console.log(regResult)
-											let enc = regResult.groups.enc
-											console.log(enc)
-											this.allInOneSign(
-												Constant.signType
-												.QRCodeSign,
-												this.checkedActivity, {
-													enc
-												})
+											gotoSign(code)
 										}, (error) => {
 											console.log(error)
 											uni.showModal({
@@ -213,7 +196,8 @@
 												content: '请用微信、支付宝或者第三方扫码，然后输入解码内容进行签到',
 												showCancel: false
 											})
-										})
+										},
+										[plus.barcode.QR])
 								}
 							})
 						}
