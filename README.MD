@@ -1,4 +1,4 @@
-<h1 准备使用go语言重写</h1>
+<h1 align="center">准备使用go语言重写</h1>
 <h2 align="center">超星学习通签到-APP版</h2>
 
 <a href='https://gitclone.com'><img src='https://gitclone.com/img/title.ico' style='width:300px;'/></a>
