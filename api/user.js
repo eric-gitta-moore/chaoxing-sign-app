@@ -69,7 +69,7 @@ function accountManager() {
  * 课程列表页面
  */
 function getCourse() {
-	return http.post('http://mooc1-1.chaoxing.com/visit/courselistdata', {
+	return http.post('http://mooc1-api.chaoxing.com/mycourse/backclazzdata?view=json&rss=1', {
 		courseType: '1',
 		courseFolderId: '0',
 		courseFolderSize: '0',
