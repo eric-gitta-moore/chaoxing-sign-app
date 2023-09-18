@@ -17,8 +17,9 @@ func main() {
 	client := &http.Client{
 		Jar: jar,
 	}
-	USERNAME := ""
-	PASSWORD := ""
+	//接入了GitHub变量
+	USERNAME := os.Getenv("USERNAME")
+	PASSWORD := os.Getenv("PASSWORD")
 	// 构造登录请求
 	loginUrl := "https://passport2.chaoxing.com/fanyalogin"
 	data := url.Values{}
