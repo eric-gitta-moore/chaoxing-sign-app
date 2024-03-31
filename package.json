@@ -8,5 +8,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "LGPL-3.0-or-later"
+  "license": "LGPL-3.0-or-later",
+  "devDependencies": {
+    "eslint": "^8.42.0",
+    "prettier": "^3.0.0"
+  }
 }

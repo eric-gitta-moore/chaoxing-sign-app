@@ -1,0 +1,10 @@
+{
+  "appId": "com.example.app",
+  "appName": "playground-app",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
