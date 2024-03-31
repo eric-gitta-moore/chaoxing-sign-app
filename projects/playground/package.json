@@ -1,0 +1,24 @@
+{
+  "name": "playground",
+  "private": true,
+  "scripts": {
+    "dev": "webpack serve --config webpack.config.ts --mode development"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.7.4",
+    "@types/react": "^18.2.73",
+    "@types/react-dom": "^18.2.23",
+    "html-webpack-plugin": "^5.6.0",
+    "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.4.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
+  },
+  "dependencies": {
+    "@capacitor/core": "^5.7.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
