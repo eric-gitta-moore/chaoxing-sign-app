@@ -1,4 +1,4 @@
-<h1 align="center">超星学习通签到 - universal platform</h1>
+<h1 align="center">超星学习通签到 - Universal Platform</h1>
 
 **新版本正在施工中，预计支持 Windows、macOS、iPad、iPhone、Android、HarmonyOS 客户端全平台**
 
