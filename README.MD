@@ -1,6 +1,10 @@
 <h1 align="center">超星学习通签到-APP版</h1>
 
-**新版本正在施工中，预计支持 Windows、macOS、iPad、iPhone、Android、HarmonyOS 客户端全平台，支持 Docker 服务器部署**
+**新版本正在施工中，预计支持 Windows、macOS、iPad、iPhone、Android、HarmonyOS 客户端全平台**
+
+**支持 Docker 服务器部署**
+
+**新版本技术栈：PC 和 Web 使用 Next.js + Node.js，移动端 Capacitor**
 
 **支持多账号切换**
 
