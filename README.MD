@@ -4,7 +4,7 @@
 
 **支持 Docker 服务器部署，可选 termux、magisk module 运行**
 
-**新版本技术栈：PC 和 Web 使用 Next.js + Node.js，移动端 Capacitor**
+**新版本技术栈：PC 和 Web 使用 Electron + Next.js + Node.js，移动端 Capacitor**
 
 **支持多账号切换**
 
