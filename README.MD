@@ -1,6 +1,6 @@
 <h1 align="center">超星学习通签到 - Universal Platform</h1>
 
-**新版本正在施工中，预计支持 Windows、macOS、iPad、iPhone、Android、HarmonyOS 客户端全平台**
+**新版本正在施工中，预计支持 Linux、Windows、macOS、iPad、iPhone、Android、HarmonyOS 客户端全平台**
 
 **支持 Docker 服务器部署，可选 termux、magisk module 运行**
 
