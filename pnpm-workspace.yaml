@@ -1,4 +1,5 @@
 packages:
   - 'projects/*'
   - 'projects/playground/*'
+  - 'projects/web/*'
   - '!**/test/**'

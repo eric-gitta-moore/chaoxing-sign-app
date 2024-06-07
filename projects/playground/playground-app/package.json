@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@capacitor/android": "^5.7.4",
-    "@capacitor/camera": "latest",
+    "@capacitor/camera": "^5.0.9",
     "@capacitor/core": "^5.7.4",
     "@capacitor/ios": "^5.7.4",
-    "@capacitor/splash-screen": "latest"
+    "@capacitor/splash-screen": "^5.0.7"
   },
   "devDependencies": {
     "@capacitor/cli": "latest",
