@@ -1,3 +1,4 @@
 packages:
   - 'projects/*'
+  - 'projects/playground/*'
   - '!**/test/**'
