@@ -1,4 +1,4 @@
-package com.example.app;
+package io.github.eric.chaosign;
 
 import com.getcapacitor.BridgeActivity;
 

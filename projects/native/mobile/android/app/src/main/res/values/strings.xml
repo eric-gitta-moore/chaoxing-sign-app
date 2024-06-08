@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">mobile</string>
-    <string name="title_activity_main">mobile</string>
-    <string name="package_name">com.example.app</string>
-    <string name="custom_url_scheme">com.example.app</string>
+    <string name="app_name">超星学习通签到</string>
+    <string name="title_activity_main">超星学习通签到</string>
+    <string name="package_name">io.github.eric.chaosign</string>
+    <string name="custom_url_scheme">io.github.eric.chaosign</string>
 </resources>

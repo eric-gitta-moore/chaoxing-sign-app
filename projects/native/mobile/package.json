@@ -2,9 +2,10 @@
   "name": "mobile",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "sync": "npx cap sync",
+    "dev-ios": "npx cap run ios",
+    "dev-android": "npx cap run android"
   },
   "keywords": [],
   "author": "",
