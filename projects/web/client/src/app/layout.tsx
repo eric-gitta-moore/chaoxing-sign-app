@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
 import React, { ReactNode } from "react";
+import type { Metadata } from "next";
+import "../styles/ionic-style";
+import "../styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +17,8 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="zh">
+    // Extra attributes from the server: class,mode
+    <html lang="zh" suppressHydrationWarning={true}>
       <body className={inter.className}>{children}</body>
     </html>
   );
