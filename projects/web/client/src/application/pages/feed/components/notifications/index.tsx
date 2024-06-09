@@ -26,7 +26,7 @@ const NotificationItem = ({ notification }: { notification: NotificationItem }) 
   </IonItem>
 );
 
-const Notifications = ({ open, onDidDismiss }: { open: boolean; onDidDismiss: () => void }) => {
+export default function Notifications({ open, onDidDismiss }: { open: boolean; onDidDismiss: () => void }) {
   const { notifications } = useGlobalStore();
 
   return (
@@ -53,6 +53,4 @@ const Notifications = ({ open, onDidDismiss }: { open: boolean; onDidDismiss: ()
       </IonContent>
     </IonModal>
   );
-};
-
-export default Notifications;
+}

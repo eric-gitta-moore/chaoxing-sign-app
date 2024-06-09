@@ -13,9 +13,9 @@ import {
 } from "@ionic/react";
 import { useState } from "react";
 import { notificationsOutline } from "ionicons/icons";
-import Card from "@/application/components/Card";
+import Card from "@/application/components/card";
 import { useGlobalStore } from "@/application/store/global";
-import Notifications from "./Notifications";
+import Notifications from "./components/notifications";
 
 type FeedCardProps = {
   title: string;
@@ -55,7 +55,7 @@ const FeedCard = ({ title, type, text, author, authorAvatar, image }: FeedCardPr
   </Card>
 );
 
-const Feed = () => {
+export default function Feed() {
   const { homeItems } = useGlobalStore();
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -87,6 +87,4 @@ const Feed = () => {
       </IonContent>
     </IonPage>
   );
-};
-
-export default Feed;
+}

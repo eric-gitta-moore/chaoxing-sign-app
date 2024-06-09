@@ -2,7 +2,7 @@ import { IonContent, IonHeader, IonItem, IonList, IonPage, IonTitle, IonToggle, 
 
 import { useGlobalStore } from "@/application/store/global";
 
-const Settings = () => {
+export default function Settings() {
   const { settings, setGlobalStore } = useGlobalStore();
   return (
     <IonPage>
@@ -32,6 +32,4 @@ const Settings = () => {
       </IonContent>
     </IonPage>
   );
-};
-
-export default Settings;
+}

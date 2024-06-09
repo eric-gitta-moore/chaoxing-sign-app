@@ -2,18 +2,18 @@ import { Redirect, Route } from "react-router-dom";
 import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/react";
 import { cog, flash, list } from "ionicons/icons";
 
-import Home from "./Feed";
-import Lists from "./Lists";
-import ListDetail from "./ListDetail";
-import Settings from "./Settings";
+import Home from "./feed";
+import Lists from "./lists";
+import ListDetails from "./lists/[listId]";
+import Settings from "./settings";
 
-const Tabs = () => {
+export default function Index() {
   return (
     <IonTabs>
       <IonRouterOutlet>
         <Route path="/feed" render={() => <Home />} exact={true} />
         <Route path="/lists" render={() => <Lists />} exact={true} />
-        <Route path="/lists/:listId" render={() => <ListDetail />} exact={true} />
+        <Route path="/lists/:listId" render={() => <ListDetails />} exact={true} />
         <Route path="/settings" render={() => <Settings />} exact={true} />
         <Route path="" render={() => <Redirect to="/feed" />} exact={true} />
       </IonRouterOutlet>
@@ -33,6 +33,4 @@ const Tabs = () => {
       </IonTabBar>
     </IonTabs>
   );
-};
-
-export default Tabs;
+}

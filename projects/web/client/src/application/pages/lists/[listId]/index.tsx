@@ -40,7 +40,7 @@ const ListItemEntry = ({ list, item }: { list: TodoListItem; item: ListItem }) =
   );
 };
 
-const ListDetail = () => {
+export default function ListDetails() {
   const { lists } = useGlobalStore();
   const params = useParams<ListDetailParams>();
   const { listId } = params;
@@ -59,6 +59,4 @@ const ListDetail = () => {
       <IonContent>{loadedList && <ListItems list={loadedList} />}</IonContent>
     </IonPage>
   );
-};
-
-export default ListDetail;
+}

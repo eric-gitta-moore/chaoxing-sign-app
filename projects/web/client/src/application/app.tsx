@@ -1,9 +1,9 @@
-'use client';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
-import { IonReactHashRouter } from '@ionic/react-router';
-import { Route } from 'react-router-dom';
+"use client";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
+import { IonReactHashRouter } from "@ionic/react-router";
+import { Route } from "react-router-dom";
 
-import Tabs from './pages/Tabs';
+import Index from "./pages";
 
 setupIonicReact({});
 
@@ -12,7 +12,7 @@ const AppShell = () => {
     <IonApp>
       <IonReactHashRouter>
         <IonRouterOutlet id="main">
-          <Route path="/" render={() => <Tabs />} />
+          <Route path="/" render={() => <Index />} />
         </IonRouterOutlet>
       </IonReactHashRouter>
     </IonApp>
