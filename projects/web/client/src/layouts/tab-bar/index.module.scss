@@ -1,6 +1,9 @@
 .page {
-  display: flex;
-  flex-direction: column;
-  align-items: baseline;
   min-height: 100vh;
+}
+
+.tabBar {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
 }
