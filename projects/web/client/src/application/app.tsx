@@ -1,22 +1,18 @@
 "use client";
-import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
-import { IonReactHashRouter } from "@ionic/react-router";
-import { Route } from "react-router-dom";
+import { RouterProvider, createHashRouter } from "react-router-dom";
+import React from "react";
 
-import Index from "./pages";
+const router = createHashRouter([
+  {
+    path: "/",
+    element: <div>Hello world!</div>,
+  },
+]);
 
-setupIonicReact({});
-
-const AppShell = () => {
+export default function AppShell() {
   return (
-    <IonApp>
-      <IonReactHashRouter>
-        <IonRouterOutlet id="main">
-          <Route path="/" render={() => <Index />} />
-        </IonRouterOutlet>
-      </IonReactHashRouter>
-    </IonApp>
+    <React.StrictMode>
+      <RouterProvider router={router}></RouterProvider>
+    </React.StrictMode>
   );
-};
-
-export default AppShell;
+}
