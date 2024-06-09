@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "sync": "npx cap sync",
-    "dev-ios": "npx cap run ios",
-    "dev-android": "npx cap run android"
+    "sync": "npx cap sync"
   },
   "keywords": [],
   "author": "",
