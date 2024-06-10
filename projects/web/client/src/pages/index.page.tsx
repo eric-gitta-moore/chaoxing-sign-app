@@ -3,8 +3,8 @@ import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import TabBarLayout from "@/layouts/tab-bar";
 import RightSVG from "@/static/right.svg";
-import Cell from "@/pages/components/cell";
 import styles from "./index.module.scss";
+import Cell from "./components/cell";
 
 export default function IndexPage() {
   const right = (
