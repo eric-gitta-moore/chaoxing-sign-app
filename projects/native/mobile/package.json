@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "sync": "npx cap sync"
+    "sync": "npx env-cmd -e dev npx cap sync",
+    "update": "npx cap update"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,7 @@
     "@capacitor/ios": "^6.0.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.0.0"
+    "@capacitor/cli": "^6.0.0",
+    "env-cmd": "^10.1.0"
   }
 }
