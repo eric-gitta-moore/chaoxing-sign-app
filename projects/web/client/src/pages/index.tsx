@@ -37,43 +37,31 @@ export default function Index() {
             <div className={styles.name}>阿巴阿巴</div>
           </div>
           <div className={styles.accountInfo__right}>
-            <i className={styles.icon}>
-              <RightSVG width={20} height={20}/>
-            </i>
+            <RightSVG className={styles.icon} width={20} height={20} />
           </div>
         </div>
 
         <div className={styles.sectionBlock}>
           <Cell>
-            <i>
-              <RightSVG width={20} height={20}/>
-            </i>
+            <RightSVG width={20} height={20} />
             <span>待办</span>
           </Cell>
         </div>
 
-
         <div className={styles.sectionBlock}>
           <Cell>
-            <i>
-              <RightSVG width={20} height={20}/>
-            </i>
+            <RightSVG width={20} height={20} />
             <span>课程</span>
           </Cell>
           <Cell>
-            <i>
-              <RightSVG width={20} height={20}/>
-            </i>
+            <RightSVG width={20} height={20} />
             <span>小组</span>
           </Cell>
         </div>
 
-
         <div className={styles.sectionBlock}>
           <Cell>
-            <i>
-              <RightSVG width={20} height={20}/>
-            </i>
+            <RightSVG width={20} height={20} />
             <span>设置</span>
           </Cell>
         </div>

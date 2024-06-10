@@ -10,13 +10,7 @@ export default function Cell(props: CellProps) {
   return (
     <div className={styles.cell}>
       <div className={styles.content}>{children}</div>
-      <div className={styles.right}>
-        {icon ?? (
-          <i className={styles.iconGray}>
-            <RightSVG width={20} height={20} />
-          </i>
-        )}
-      </div>
+      <div className={styles.right}>{icon ?? <RightSVG className={styles.iconGray} width={20} height={20} />}</div>
     </div>
   );
 }
