@@ -8,20 +8,34 @@
   padding: 0 15px;
   height: 80px;
   background: white;
-  border-top: 1px solid #EBEBEB;
+  border-top: 1px solid #ebebeb;
 
   &__left {
     display: flex;
     align-items: center;
     gap: 15px;
 
-    .avatar{
+    .avatar {
       width: 50px;
       height: 50px;
       border-radius: 50%;
     }
+
+    .name {
+      font-size: 16px;
+    }
   }
 
   &__right {
+    .icon {
+      color: #ccc;
+    }
+  }
+}
+
+.sectionBlock {
+  margin-bottom: 8px;
+  &:last-of-type {
+    margin-bottom: 0;
   }
 }
