@@ -6,7 +6,7 @@ import RightSVG from "@/static/right.svg";
 import Cell from "@/pages/components/cell";
 import styles from "./index.module.scss";
 
-export default function Index() {
+export default function IndexPage() {
   const right = (
     <div style={{ fontSize: 24 }}>
       <Space style={{ "--gap": "16px" }}>
