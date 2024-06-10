@@ -249,6 +249,12 @@ importers:
       postcss:
         specifier: ^8
         version: 8.4.38
+      postcss-mobile-forever:
+        specifier: ^4.1.4
+        version: 4.1.4(postcss@8.4.38)
+      postcss-px-to-viewport-8-plugin:
+        specifier: ^1.2.5
+        version: 1.2.5
       prettier:
         specifier: ^3.2.5
         version: 3.2.5
@@ -4770,11 +4776,19 @@ packages:
       ts-node:
         optional: true
 
+  postcss-mobile-forever@4.1.4:
+    resolution: {integrity: sha512-/pf7nhOORMrKmniI4fJDUNmj3y/8ENibHvOAeP1Vpd1ulSmq1Q0ZgKtYLQs4CauGHhvZRltLN56yiyX8y3SZFg==}
+    peerDependencies:
+      postcss: ^8.0.0
+
   postcss-nested@6.0.1:
     resolution: {integrity: sha512-mEp4xPMi5bSWiMbsgoPfcP74lsWLHkQbZc3sY+jWYd65CUwXrUaTp0fmNpa01ZcETKlIgUdFN/MpS2xZtqL9dQ==}
     engines: {node: '>=12.0'}
     peerDependencies:
       postcss: ^8.2.14
+
+  postcss-px-to-viewport-8-plugin@1.2.5:
+    resolution: {integrity: sha512-+yc69+q/euV7iKh5fGXY6C/lpepmVx2DGFHeYj5BpzIFyBBpdACDjZyrZ8AV0kCg+J0bplBv4ZA1QTzgaK0rGg==}
 
   postcss-selector-parser@6.1.0:
     resolution: {integrity: sha512-UMz42UD0UY0EApS0ZL9o1XnLhSTtvvvLe5Dc2H2O56fvRZi+KulDyf5ctDhhtYJBGKStV2FL1fy6253cmLgqVQ==}
@@ -11387,10 +11401,18 @@ snapshots:
       postcss: 8.4.38
       ts-node: 10.9.2(@types/node@20.12.2)(typescript@5.4.3)
 
+  postcss-mobile-forever@4.1.4(postcss@8.4.38):
+    dependencies:
+      postcss: 8.4.38
+
   postcss-nested@6.0.1(postcss@8.4.38):
     dependencies:
       postcss: 8.4.38
       postcss-selector-parser: 6.1.0
+
+  postcss-px-to-viewport-8-plugin@1.2.5:
+    dependencies:
+      object-assign: 4.1.1
 
   postcss-selector-parser@6.1.0:
     dependencies:

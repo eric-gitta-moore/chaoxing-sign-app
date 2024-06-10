@@ -25,6 +25,9 @@ function configureSVGR(config) {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "export",
+  images: {
+    unoptimized: true,
+  },
   transpilePackages: ["antd-mobile"],
   webpack(config) {
     configureSVGR(config);

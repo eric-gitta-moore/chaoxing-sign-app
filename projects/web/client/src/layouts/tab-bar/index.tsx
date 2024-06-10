@@ -1,13 +1,19 @@
-import { ReactNode } from "react";
+import React from "react";
 import { TabBar } from "antd-mobile";
 import { useRouter } from "next/router";
 import Icon from "@/components/icon";
 import HomeSVG from "@/static/home.svg";
 import MsgSVG from "@/static/msg.svg";
 import UserSVG from "@/static/user.svg";
-import style from "./index.module.scss";
+import styles from "./index.module.scss";
 
-export default function TabBarLayout({ children }: { children: ReactNode }) {
+export type TarBarLayoutProps = {
+  children?: React.ReactNode;
+  style?: React.CSSProperties;
+};
+
+export default function TabBarLayout(props: TarBarLayoutProps) {
+  const { children, style } = props;
   const router = useRouter();
   const { pathname } = router;
 
@@ -15,9 +21,9 @@ export default function TabBarLayout({ children }: { children: ReactNode }) {
     router.push(value);
   }
   return (
-    <div className={style.page}>
+    <div className={styles.page} style={style}>
       {children}
-      <TabBar className={style.tabBar} activeKey={pathname} onChange={setRouteActive}>
+      <TabBar className={styles.tabBar} activeKey={pathname} onChange={setRouteActive}>
         <TabBar.Item
           key="/home"
           title="首页"

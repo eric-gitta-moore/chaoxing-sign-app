@@ -1,6 +1,8 @@
-import { Button, NavBar, Space, Toast } from "antd-mobile";
+import { Image, NavBar, Space, Toast } from "antd-mobile";
 import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
 import TabBarLayout from "@/layouts/tab-bar";
+import RightSVG from "@/static/right.svg";
+import styles from "./index.module.scss";
 
 export default function Index() {
   const right = (
@@ -18,13 +20,25 @@ export default function Index() {
       duration: 1000,
     });
   return (
-    <TabBarLayout>
-      <NavBar right={right} onBack={back}>
+    <TabBarLayout style={{ background: "#F4F7F8" }}>
+      <NavBar right={right} onBack={back} style={{ background: "white" }}>
         标题
       </NavBar>
-      <Button color="primary" fill="solid" className="my-2">
-        Solid
-      </Button>
+      <section className={styles.pageContent}>
+        <div className={styles.accountInfo}>
+          <div className={styles.accountInfo__left}>
+            <Image
+              className={styles.avatar}
+              src="https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60"
+              alt="username"
+            />
+            <div className="name">username</div>
+          </div>
+          <div className="right">
+            <RightSVG />
+          </div>
+        </div>
+      </section>
     </TabBarLayout>
   );
 }
