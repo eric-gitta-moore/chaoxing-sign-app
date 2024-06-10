@@ -22,7 +22,7 @@ export default function Index() {
       <NavBar right={right} onBack={back}>
         标题
       </NavBar>
-      <Button color="primary" fill="solid">
+      <Button color="primary" fill="solid" className="my-2">
         Solid
       </Button>
     </TabBarLayout>
