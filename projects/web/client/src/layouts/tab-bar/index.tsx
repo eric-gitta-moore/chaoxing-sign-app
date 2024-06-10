@@ -1,9 +1,10 @@
 import { ReactNode } from "react";
 import { TabBar } from "antd-mobile";
-import { HomeOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/router";
-import NextSvg from "@/static/next.svg";
 import Icon from "@/components/icon";
+import HomeSVG from "@/static/home.svg";
+import MsgSVG from "@/static/msg.svg";
+import UserSVG from "@/static/user.svg";
 import style from "./index.module.scss";
 
 export default function TabBarLayout({ children }: { children: ReactNode }) {
@@ -21,13 +22,29 @@ export default function TabBarLayout({ children }: { children: ReactNode }) {
           key="/home"
           title="首页"
           icon={
-            <Icon style={{ width: "40px" }}>
-              <NextSvg />
+            <Icon>
+              <HomeSVG />
             </Icon>
           }
         />
-        <TabBar.Item key="/message" title="消息" icon={<HomeOutlined />} />
-        <TabBar.Item key="/my" title="我" icon={<UserOutlined />} />
+        <TabBar.Item
+          key="/message"
+          title="消息"
+          icon={
+            <Icon>
+              <MsgSVG />
+            </Icon>
+          }
+        />
+        <TabBar.Item
+          key="/"
+          title="我"
+          icon={
+            <Icon>
+              <UserSVG />
+            </Icon>
+          }
+        />
       </TabBar>
     </div>
   );
