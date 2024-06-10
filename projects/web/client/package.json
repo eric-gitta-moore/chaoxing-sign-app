@@ -6,8 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start",
-    "prepare": "husky"
+    "prepare": "husky",
+    "start": "next start"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
