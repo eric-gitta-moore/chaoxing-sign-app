@@ -1,3 +1,4 @@
+import React from "react";
 import RightSVG from "@/static/right.svg";
 import styles from "./index.module.scss";
 
