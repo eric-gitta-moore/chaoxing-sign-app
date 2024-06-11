@@ -1,12 +1,15 @@
-import { Image, NavBar, Space, Toast } from "antd-mobile";
+import { Button, DatePicker, Image, NavBar, Space, Toast } from "antd-mobile";
 import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
 import clsx from "clsx";
+import { useState } from "react";
 import TabBarLayout from "@/layouts/tab-bar";
 import RightSVG from "@/static/right.svg";
 import styles from "./index.module.scss";
 import Cell from "./components/cell";
 
 export default function IndexPage() {
+  const [visible, setVisible] = useState(false);
+
   const right = (
     <div style={{ fontSize: 24 }}>
       <Space style={{ "--gap": "16px" }}>
@@ -24,7 +27,7 @@ export default function IndexPage() {
   return (
     <TabBarLayout style={{ background: "#F4F7F8" }}>
       <NavBar right={right} onBack={back} style={{ background: "white" }}>
-        标题
+        标题1234s
       </NavBar>
       <section className={styles.pageContent}>
         <div className={clsx(styles.accountInfo, styles.sectionBlock)}>
@@ -65,6 +68,24 @@ export default function IndexPage() {
             <span>设置</span>
           </Cell>
         </div>
+
+        <Button
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          选择
+        </Button>
+        <DatePicker
+          title="时间选择"
+          visible={visible}
+          onClose={() => {
+            setVisible(false);
+          }}
+          onConfirm={(val) => {
+            Toast.show(val.toDateString());
+          }}
+        />
       </section>
     </TabBarLayout>
   );

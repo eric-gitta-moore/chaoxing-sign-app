@@ -4,6 +4,8 @@
 
 @layer base {
   /* postcss-mobile-forever appSelector recognize */
-  #app {
+  #__app {
+  }
+  #__app-wrapper {
   }
 }

@@ -4,8 +4,8 @@ export default function Document() {
   return (
     <Html lang="zh">
       <Head />
-      <body>
-        <div id="app">
+      <body id="__app">
+        <div id="__app-wrapper">
           <Main />
         </div>
         <NextScript />
