@@ -1,0 +1,3 @@
+[submodule "decompiled/chaosign-decompiled"]
+	path = decompiled/chaosign-decompiled
+	url = https://github.com/eric-gitta-moore/chaosign-decompiled.git
