@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { useState } from "react";
 import TabBarLayout from "@/layouts/tab-bar";
 import RightSVG from "@/static/right.svg";
+import { IMAGES_URL } from "@/pages/constant";
 import styles from "./index.module.scss";
 import Cell from "./components/cell";
 
@@ -25,7 +26,7 @@ export default function IndexPage() {
       duration: 1000,
     });
   return (
-    <TabBarLayout style={{ background: "#F4F7F8" }}>
+    <TabBarLayout style={{ background: "#f5f6f8" }}>
       <NavBar right={right} onBack={back} style={{ background: "white" }}>
         标题1234s
       </NavBar>
@@ -46,25 +47,37 @@ export default function IndexPage() {
 
         <div className={styles.sectionBlock}>
           <Cell>
-            <RightSVG width={20} height={20} />
+            <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_schedule} />
             <span>待办</span>
           </Cell>
         </div>
 
         <div className={styles.sectionBlock}>
           <Cell>
-            <RightSVG width={20} height={20} />
+            <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_course} />
             <span>课程</span>
           </Cell>
           <Cell>
-            <RightSVG width={20} height={20} />
+            <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_note} />
+            <span>笔记本</span>
+          </Cell>
+          <Cell>
+            <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_yunpan} />
+            <span>云盘</span>
+          </Cell>
+          <Cell>
+            <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_group} />
             <span>小组</span>
+          </Cell>
+          <Cell>
+            <Image className={styles.cellIcon} src={IMAGES_URL.ic_mine_bookshelf} />
+            <span>书架</span>
           </Cell>
         </div>
 
         <div className={styles.sectionBlock}>
           <Cell>
-            <RightSVG width={20} height={20} />
+            <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_setting} />
             <span>设置</span>
           </Cell>
         </div>

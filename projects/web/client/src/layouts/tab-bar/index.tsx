@@ -1,6 +1,7 @@
 import React from "react";
 import { TabBar } from "antd-mobile";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 import Icon from "@/components/icon";
 import HomeSVG from "@/static/home.svg";
 import MsgSVG from "@/static/msg.svg";
@@ -10,10 +11,11 @@ import styles from "./index.module.scss";
 export type TarBarLayoutProps = {
   children?: React.ReactNode;
   style?: React.CSSProperties;
+  className?: string;
 };
 
 export default function TabBarLayout(props: TarBarLayoutProps) {
-  const { children, style } = props;
+  const { children, style, className } = props;
   const router = useRouter();
   const { pathname } = router;
 
@@ -21,7 +23,7 @@ export default function TabBarLayout(props: TarBarLayoutProps) {
     router.push(value);
   }
   return (
-    <div className={styles.page} style={style}>
+    <div className={clsx(styles.page, className)} style={style}>
       {children}
       <TabBar className={styles.tabBar} activeKey={pathname} onChange={setRouteActive}>
         <TabBar.Item
