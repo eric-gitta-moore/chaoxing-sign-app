@@ -8,6 +8,13 @@ import { IMAGES_URL } from "@/pages/constant";
 import styles from "./index.module.scss";
 import Cell from "./components/cell";
 
+/**
+ * 首页
+ *
+ * reference:
+ * 学习通 app 布局 xml
+ * https://github.com/eric-gitta-moore/chaosign-decompiled/blob/42c5b4c15fa49808f9e9bf5c8b0bd334d3244316/resources/res/layout/fragment_mine2.xml
+ */
 export default function IndexPage() {
   const [visible, setVisible] = useState(false);
 
