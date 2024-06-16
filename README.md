@@ -18,7 +18,7 @@
 
 ## 截图
 
-<img src="./readme_static/1.gif" width="48%"/><img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwyva0vj30u01uo0xn.jpg" width="48%"/>
+<img src="https://github.com/eric-gitta-moore/chaoxing-sign-app/raw/main/readme_static/1.gif" width="48%"/><img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwyva0vj30u01uo0xn.jpg" width="48%"/>
 
 <img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwytag4j30u01uodna.jpg" width="48%"/><img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwzy6xvj30u01uoh2r.jpg" width="48%"/>
 
