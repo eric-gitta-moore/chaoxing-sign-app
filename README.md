@@ -116,5 +116,12 @@
 + https://github.com/cxOrz/chaoxing-sign-ui
 
 
+## Star History
 
-**感谢超星学习通给了一个学习的机会**
+<a href="https://star-history.com/#eric-gitta-moore/chaoxing-sign-app&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=eric-gitta-moore/chaoxing-sign-app&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=eric-gitta-moore/chaoxing-sign-app&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=eric-gitta-moore/chaoxing-sign-app&type=Date" />
+ </picture>
+</a>
