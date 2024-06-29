@@ -8,4 +8,7 @@
   }
   #__app-wrapper {
   }
+  #__next {
+    height: 100%;
+  }
 }

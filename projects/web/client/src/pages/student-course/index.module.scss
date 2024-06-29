@@ -1,0 +1,29 @@
+.tabs {
+  --content-padding: 0;
+  --title-font-size: 15px;
+  height: 100%;
+  :global(.adm-tabs-header) {
+    background: #f5f6f8;
+    :global(.adm-tabs-tab) {
+      color: gray;
+      &:global(.adm-tabs-tab-active) {
+        color: black;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.content {
+  height: 100%;
+}
+
+.page {
+  height: 100%;
+  :global(.adm-pull-to-refresh) {
+    height: 100%;
+    :global(.adm-pull-to-refresh-content) {
+      height: 100%;
+    }
+  }
+}

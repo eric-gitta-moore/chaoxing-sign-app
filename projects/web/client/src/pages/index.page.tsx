@@ -2,6 +2,7 @@ import { Button, DatePicker, Image, NavBar, Space, Toast } from "antd-mobile";
 import { MoreOutlined, SearchOutlined } from "@ant-design/icons";
 import clsx from "clsx";
 import { useState } from "react";
+import Link from "next/link";
 import TabBarLayout from "@/layouts/tab-bar";
 import RightSVG from "@/static/right.svg";
 import { IMAGES_URL } from "@/pages/constant";
@@ -33,7 +34,7 @@ export default function IndexPage() {
       duration: 1000,
     });
   return (
-    <TabBarLayout style={{ background: "#f5f6f8" }}>
+    <TabBarLayout>
       <NavBar right={right} onBack={back} style={{ background: "white" }}>
         标题1234s
       </NavBar>
@@ -60,10 +61,12 @@ export default function IndexPage() {
         </div>
 
         <div className={styles.sectionBlock}>
-          <Cell>
-            <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_course} />
-            <span>课程</span>
-          </Cell>
+          <Link href="/my-course">
+            <Cell>
+              <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_course} />
+              <span>课程</span>
+            </Cell>
+          </Link>
           <Cell>
             <Image className={styles.cellIcon} src={IMAGES_URL.ic_my_note} />
             <span>笔记本</span>

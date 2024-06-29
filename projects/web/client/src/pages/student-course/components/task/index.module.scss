@@ -1,0 +1,49 @@
+.listItem {
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  margin: 0 14px;
+  gap: 12px;
+
+  &_wrapper {
+    border-bottom: 0.5px solid #c1c1c1;
+  }
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  .image {
+    border-radius: 5px; /* mobile-ignore */
+    height: 40px; /* mobile-ignore */
+    width: 40px; /* mobile-ignore */
+  }
+
+  .title {
+    flex: 1;
+    color: black;
+
+    .tips {
+      color: gray;
+    }
+  }
+
+  .right {
+    justify-self: end;
+    width: 20px;
+    height: 20px;
+    color: gray;
+  }
+}
+
+.gestureTips {
+  color: #c1c1c1;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.content {
+  height: 100%;
+}

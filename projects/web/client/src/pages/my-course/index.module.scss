@@ -1,0 +1,51 @@
+.mainContent {
+  height: 100vh;
+  background: #f5f6f8;
+
+  .search {
+    background: white;
+    margin: 10px 16px 0 16px;
+    border-radius: 10px;
+    input {
+      height: 30px;
+      font-size: 12px;
+      padding: 0 10px;
+      &::placeholder {
+        text-align: center;
+      }
+    }
+  }
+}
+
+.courseItem {
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  height: 65px;
+  margin: 15px 15px 0 15px;
+  padding: 12px;
+  gap: 12px;
+
+  .image {
+    border-radius: 5px; /* mobile-ignore */
+    height: 40px; /* mobile-ignore */
+    width: 40px; /* mobile-ignore */
+  }
+
+  .title {
+    flex: 1;
+    color: black;
+
+    .tips {
+      color: gray;
+    }
+  }
+
+  .right {
+    justify-self: end;
+    width: 20px;
+    height: 20px;
+    color: gray;
+  }
+}
