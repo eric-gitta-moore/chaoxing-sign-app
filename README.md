@@ -15,10 +15,9 @@
 **注意：** 只能手动签到。自动签到后续看情况添加
 
 
-
 ## 截图
 
-<img src="https://github.com/eric-gitta-moore/chaoxing-sign-app/raw/master/readme_static/1.gif" width="48%"/><img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwyva0vj30u01uo0xn.jpg" width="48%"/>
+<img src="https://github.com/eric-gitta-moore/chaoxing-sign-app/raw/master/readme_static/1.gif" width="48%"/><img src="https://github.com/user-attachments/assets/3d188df5-bdc2-4157-9afe-e55fb82ac6a7" width="48%"/>
 
 <img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwytag4j30u01uodna.jpg" width="48%"/><img src="http://tva1.sinaimg.cn/mw690/008d89Swgy1h2qwwzy6xvj30u01uoh2r.jpg" width="48%"/>
 
